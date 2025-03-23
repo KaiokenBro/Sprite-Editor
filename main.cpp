@@ -3,7 +3,7 @@
  *
  * Team Members:
  * - Victor Valdez Landa
- * - Harrison Doppelt
+ * - Harrison Doppelt (READY)
  * - Charlie Jones
  * - Sam Garcia
  * - Richard Nghiem
@@ -24,7 +24,6 @@
  *
  * @date 03/23/2025
  */
-
 
 #include "mainwindow.h"
 
