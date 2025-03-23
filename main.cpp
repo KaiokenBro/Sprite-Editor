@@ -2,7 +2,7 @@
  * @file main.cpp
  *
  * Team Members:
- * - Victor Valdez Landa
+ * - Victor Valdez Landa (READY)
  * - Harrison Doppelt (READY)
  * - Charlie Jones
  * - Sam Garcia
