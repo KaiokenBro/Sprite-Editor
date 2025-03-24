@@ -4,13 +4,10 @@
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
-namespace Ui {
-class MainWindow;
-}
+namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
-class MainWindow : public QMainWindow
-{
+class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
@@ -19,5 +16,18 @@ public:
 
 private:
     Ui::MainWindow *ui;
+
+public slots:
+    void hideWelcomeLabel();
+    void displayCreateFileBox();
+    void hideCreateFileBox();
+    void validateInputs();
+    void onSetSizeButtonClicked();
+    void disableNewButton();
+    void enableNewButton();
+    void disableLoadButton();
+    void enableLoadButton();
+
 };
+
 #endif // MAINWINDOW_H
