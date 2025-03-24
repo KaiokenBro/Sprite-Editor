@@ -5,7 +5,7 @@
  * - Victor Valdez Landa (READY)
  * - Harrison Doppelt (READY)
  * - Charlie Jones
- * - Sam Garcia
+ * - Sam Garcia (READY)
  * - Richard Nghiem
  * - Nicholas Cicalese
  *
