@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "editorwindow.h"
+
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
@@ -11,13 +13,19 @@ class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
+
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
 private:
+
     Ui::MainWindow *ui;
 
+    // Pointer to EditorWindow
+    EditorWindow *editorWindow;
+
 public slots:
+
     void hideWelcomeLabel();
     void displayCreateFileBox();
     void hideCreateFileBox();
@@ -27,7 +35,8 @@ public slots:
     void enableNewButton();
     void disableLoadButton();
     void enableLoadButton();
-
+    void openEditorWindow();
+    void loadFile();
 };
 
 #endif // MAINWINDOW_H

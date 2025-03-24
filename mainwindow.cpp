@@ -1,7 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "editorwindow.h"
 
 #include <QIntValidator>
+#include <QFileDialog>
 
 // Pattern
 // connect(WhatIsEmittingTheSignal,
@@ -14,7 +16,9 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , editorWindow(nullptr)
 {
+
     ui->setupUi(this);
 
     // Create a validator to restrict input to integers between 16 and 512
@@ -32,6 +36,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Initially disable the createButton
     ui->createButton->setEnabled(false);
+
+    // Initially disable the openButton
+    ui->openButton->setEnabled(false);
 
     // When newButton is clicked, hide welcomeLabel
     connect(ui->newButton,
@@ -87,19 +94,29 @@ MainWindow::MainWindow(QWidget *parent)
             this,
             &MainWindow::enableLoadButton);
 
-    // When loadButton is clicked, disable loadButton
-    connect(ui->loadButton,
-            &QPushButton::clicked,
-            this,
-            &MainWindow::disableLoadButton);
-
     // When loadButton is clicked, enable newButton
     connect(ui->loadButton,
             &QPushButton::clicked,
             this,
             &MainWindow::enableNewButton);
 
+    // When createButton is clicked, openEditorWindow
+    connect(ui->createButton,
+            &QPushButton::clicked,
+            this,
+            &MainWindow::openEditorWindow);
 
+    // When loadButton is clicked, loadFile
+    connect(ui->loadButton,
+            &QPushButton::clicked,
+            this,
+            &MainWindow::loadFile);
+
+    // When openButton is clicked, openEditorWindow
+    connect(ui->openButton,
+            &QPushButton::clicked,
+            this,
+            &MainWindow::openEditorWindow);
 
 }
 
@@ -173,5 +190,40 @@ void MainWindow::onSetSizeButtonClicked() {
 
         // Disable the createButton since the input is invalid
         ui->createButton->setEnabled(false);
+    }
+}
+
+// Slot
+void MainWindow::openEditorWindow() {
+
+    if (!editorWindow) {
+        // Create the editor window
+        editorWindow = new EditorWindow(nullptr);
+    }
+
+    // Show the editor window
+    editorWindow->show();
+
+    // Close the main window
+    this->close();
+}
+
+// Slot
+void MainWindow::loadFile() {
+
+    QString fileName = QFileDialog::getOpenFileName(
+        this,
+        "Open Sprite File",
+        QDir::homePath(),
+        "Image Files (*.png *.bmp *.jpg *.jpeg);;All Files (*.*)"
+        );
+
+    if (!fileName.isEmpty()) {
+
+        // Update the filePathLabel from the designer
+        ui->filePathLabel->setText(fileName);
+
+        // Enable the openButton
+        ui->openButton->setEnabled(true);
     }
 }
