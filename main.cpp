@@ -4,7 +4,7 @@
  * Team Members:
  * - Victor Valdez Landa (READY)
  * - Harrison Doppelt (READY)
- * - Charlie Jones
+ * - Charlie Jones (READY)
  * - Sam Garcia (READY)
  * - Richard Nghiem
  * - Nicholas Cicalese
@@ -12,7 +12,7 @@
  * GitHub Usernames:
  * - KaiokenBro
  * - hdoppelt
- * -
+ * - charlesj24240
  * -
  * -
  *
