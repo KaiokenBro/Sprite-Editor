@@ -11,7 +11,7 @@ class EditorWindow : public QMainWindow {
     Q_OBJECT
 
 public:
-    explicit EditorWindow(QWidget *parent = nullptr);
+    explicit EditorWindow(int width, int height, QWidget *parent = nullptr);
     ~EditorWindow();
 
 private:

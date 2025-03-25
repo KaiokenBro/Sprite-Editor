@@ -162,6 +162,7 @@ void MainWindow::enableLoadButton() {
 
 // Slot
 void MainWindow::validateInputs() {
+
     // Check if both fields have non-empty values
     bool validWidth = !ui->widthLineEdit->text().isEmpty();
     bool validHeight = !ui->heightLineEdit->text().isEmpty();
@@ -172,6 +173,7 @@ void MainWindow::validateInputs() {
 
 // Slot
 void MainWindow::onSetSizeButtonClicked() {
+
     int width = ui->widthLineEdit->text().toInt();
     int height = ui->heightLineEdit->text().toInt();
 
@@ -196,9 +198,12 @@ void MainWindow::onSetSizeButtonClicked() {
 // Slot
 void MainWindow::openEditorWindow() {
 
+    int width = ui->widthLineEdit->text().toInt();
+    int height = ui->heightLineEdit->text().toInt();
+
     if (!editorWindow) {
         // Create the editor window
-        editorWindow = new EditorWindow(nullptr);
+        editorWindow = new EditorWindow(width, height, nullptr);
     }
 
     // Show the editor window
