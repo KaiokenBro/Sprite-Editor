@@ -1,9 +1,9 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
 #include "editorwindow.h"
+#include "ui_mainwindow.h"
 
-#include <QIntValidator>
 #include <QFileDialog>
+#include <QIntValidator>
 
 // Pattern
 // connect(WhatIsEmittingTheSignal,
@@ -11,14 +11,12 @@
 //        WhatHasASlot,
 //        WhichSlotIsIt);
 
-
 // Constructor
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , editorWindow(nullptr)
 {
-
     ui->setupUi(this);
 
     // Create a validator to restrict input to integers between 16 and 512
@@ -41,128 +39,96 @@ MainWindow::MainWindow(QWidget *parent)
     ui->openButton->setEnabled(false);
 
     // When newButton is clicked, hide welcomeLabel
-    connect(ui->newButton,
-            &QPushButton::clicked,
-            this,
-            &MainWindow::hideWelcomeLabel);
+    connect(ui->newButton, &QPushButton::clicked, this, &MainWindow::hideWelcomeLabel);
 
     // When loadButton is clicked, hide welcomeLabel
-    connect(ui->loadButton,
-            &QPushButton::clicked,
-            this,
-            &MainWindow::hideWelcomeLabel);
+    connect(ui->loadButton, &QPushButton::clicked, this, &MainWindow::hideWelcomeLabel);
 
     // When newButton is clicked, display createFileBox
-    connect(ui->newButton,
-            &QPushButton::clicked,
-            this,
-            &MainWindow::displayCreateFileBox);
+    connect(ui->newButton, &QPushButton::clicked, this, &MainWindow::displayCreateFileBox);
 
     // When loadButton is clicked, hide createFileBox
-    connect(ui->loadButton,
-            &QPushButton::clicked,
-            this,
-            &MainWindow::hideCreateFileBox);
+    connect(ui->loadButton, &QPushButton::clicked, this, &MainWindow::hideCreateFileBox);
 
     // When widthLineEdit is changed, check to enable setSizeButton
-    connect(ui->widthLineEdit,
-            &QLineEdit::textChanged,
-            this,
-            &MainWindow::validateInputs);
+    connect(ui->widthLineEdit, &QLineEdit::textChanged, this, &MainWindow::validateInputs);
 
     // When heightLineEdit is changed, check to enable setSizeButton
-    connect(ui->heightLineEdit,
-            &QLineEdit::textChanged,
-            this,
-            &MainWindow::validateInputs);
+    connect(ui->heightLineEdit, &QLineEdit::textChanged, this, &MainWindow::validateInputs);
 
     // When setSizeButton is clicked, update statusLabel
-    connect(ui->setSizeButton,
-            &QPushButton::clicked,
-            this,
-            &MainWindow::onSetSizeButtonClicked);
+    connect(ui->setSizeButton, &QPushButton::clicked, this, &MainWindow::onSetSizeButtonClicked);
 
     // When newButton is clicked, disable newButton
-    connect(ui->newButton,
-            &QPushButton::clicked,
-            this,
-            &MainWindow::disableNewButton);
+    connect(ui->newButton, &QPushButton::clicked, this, &MainWindow::disableNewButton);
 
     // When newButton is clicked, enable loadButton
-    connect(ui->newButton,
-            &QPushButton::clicked,
-            this,
-            &MainWindow::enableLoadButton);
+    connect(ui->newButton, &QPushButton::clicked, this, &MainWindow::enableLoadButton);
 
     // When loadButton is clicked, enable newButton
-    connect(ui->loadButton,
-            &QPushButton::clicked,
-            this,
-            &MainWindow::enableNewButton);
+    connect(ui->loadButton, &QPushButton::clicked, this, &MainWindow::enableNewButton);
 
     // When createButton is clicked, openEditorWindow
-    connect(ui->createButton,
-            &QPushButton::clicked,
-            this,
-            &MainWindow::openEditorWindow);
+    connect(ui->createButton, &QPushButton::clicked, this, &MainWindow::openEditorWindow);
 
     // When loadButton is clicked, loadFile
-    connect(ui->loadButton,
-            &QPushButton::clicked,
-            this,
-            &MainWindow::loadFile);
+    connect(ui->loadButton, &QPushButton::clicked, this, &MainWindow::loadFile);
 
     // When openButton is clicked, openEditorWindow
-    connect(ui->openButton,
-            &QPushButton::clicked,
-            this,
-            &MainWindow::openEditorWindow);
-
+    connect(ui->openButton, &QPushButton::clicked, this, &MainWindow::openEditorWindow);
 }
 
 // Destructor
-MainWindow::~MainWindow() {
+MainWindow::~MainWindow()
+{
     delete ui;
 }
 
 // Slot
-void MainWindow::hideWelcomeLabel() {
+void MainWindow::hideWelcomeLabel()
+{
     ui->welcomeLabel->setVisible(false);
 }
 
 // Slot
-void MainWindow::displayCreateFileBox() {
+void MainWindow::displayCreateFileBox()
+{
     ui->createFileBox->setVisible(true);
 }
 
 // Slot
-void MainWindow::hideCreateFileBox() {
+void MainWindow::hideCreateFileBox()
+{
     ui->createFileBox->setVisible(false);
 }
 
 // Slot
-void MainWindow::disableNewButton() {
+void MainWindow::disableNewButton()
+{
     ui->newButton->setEnabled(false);
 }
 
 // Slot
-void MainWindow::enableNewButton() {
+void MainWindow::enableNewButton()
+{
     ui->newButton->setEnabled(true);
 }
 
 // Slot
-void MainWindow::disableLoadButton() {
+void MainWindow::disableLoadButton()
+{
     ui->loadButton->setEnabled(false);
 }
 
 // Slot
-void MainWindow::enableLoadButton() {
+void MainWindow::enableLoadButton()
+{
     ui->loadButton->setEnabled(true);
 }
 
 // Slot
-void MainWindow::validateInputs() {
-
+void MainWindow::validateInputs()
+{
     // Check if both fields have non-empty values
     bool validWidth = !ui->widthLineEdit->text().isEmpty();
     bool validHeight = !ui->heightLineEdit->text().isEmpty();
@@ -172,8 +138,8 @@ void MainWindow::validateInputs() {
 }
 
 // Slot
-void MainWindow::onSetSizeButtonClicked() {
-
+void MainWindow::onSetSizeButtonClicked()
+{
     int width = ui->widthLineEdit->text().toInt();
     int height = ui->heightLineEdit->text().toInt();
 
@@ -196,8 +162,8 @@ void MainWindow::onSetSizeButtonClicked() {
 }
 
 // Slot
-void MainWindow::openEditorWindow() {
-
+void MainWindow::openEditorWindow()
+{
     int width = ui->widthLineEdit->text().toInt();
     int height = ui->heightLineEdit->text().toInt();
 
@@ -214,17 +180,15 @@ void MainWindow::openEditorWindow() {
 }
 
 // Slot
-void MainWindow::loadFile() {
-
-    QString fileName = QFileDialog::getOpenFileName(
-        this,
-        "Open Sprite File",
-        QDir::homePath(),
-        "Image Files (*.png *.bmp *.jpg *.jpeg);;All Files (*.*)"
-        );
+void MainWindow::loadFile()
+{
+    QString fileName
+        = QFileDialog::getOpenFileName(this,
+                                       "Open Sprite File",
+                                       QDir::homePath(),
+                                       "Image Files (*.png *.bmp *.jpg *.jpeg);;All Files (*.*)");
 
     if (!fileName.isEmpty()) {
-
         // Update the filePathLabel from the designer
         ui->filePathLabel->setText(fileName);
 

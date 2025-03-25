@@ -1,8 +1,8 @@
 #include "editorwindow.h"
 #include "ui_editorwindow.h"
 
-#include <QGraphicsView>
 #include <QGraphicsScene>
+#include <QGraphicsView>
 
 EditorWindow::EditorWindow(int width, int height, QWidget *parent)
     : QMainWindow(parent)
@@ -19,6 +19,7 @@ EditorWindow::EditorWindow(int width, int height, QWidget *parent)
     scene->setSceneRect(0, 0, width, height);
 }
 
-EditorWindow::~EditorWindow() {
+EditorWindow::~EditorWindow()
+{
     delete ui;
 }

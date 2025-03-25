@@ -7,7 +7,7 @@
  * - Charlie Jones (READY)
  * - Sam Garcia (READY)
  * - Richard Nghiem
- * - Nicholas Cicalese
+ * - Nicholas Cicalese (READY)
  *
  * GitHub Usernames:
  * - KaiokenBro
@@ -29,7 +29,8 @@
 
 #include <QApplication>
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     QApplication a(argc, argv);
     MainWindow w;
     QApplication::setStyle("Fusion");

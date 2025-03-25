@@ -4,10 +4,13 @@
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class EditorWindow; }
+namespace Ui {
+class EditorWindow;
+}
 QT_END_NAMESPACE
 
-class EditorWindow : public QMainWindow {
+class EditorWindow : public QMainWindow
+{
     Q_OBJECT
 
 public:

@@ -9,7 +9,6 @@
 //        WhatHasASlot,
 //        WhichSlotIsIt);
 
-
 // Constructor
 StartWindow::StartWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -34,114 +33,90 @@ StartWindow::StartWindow(QWidget *parent)
     ui->createButton->setEnabled(false);
 
     // When newButton is clicked, hide welcomeLabel
-    connect(ui->newButton,
-            &QPushButton::clicked,
-            this,
-            &StartWindow::hideWelcomeLabel);
+    connect(ui->newButton, &QPushButton::clicked, this, &StartWindow::hideWelcomeLabel);
 
     // When loadButton is clicked, hide welcomeLabel
-    connect(ui->loadButton,
-            &QPushButton::clicked,
-            this,
-            &StartWindow::hideWelcomeLabel);
+    connect(ui->loadButton, &QPushButton::clicked, this, &StartWindow::hideWelcomeLabel);
 
     // When newButton is clicked, display createFileBox
-    connect(ui->newButton,
-            &QPushButton::clicked,
-            this,
-            &StartWindow::displayCreateFileBox);
+    connect(ui->newButton, &QPushButton::clicked, this, &StartWindow::displayCreateFileBox);
 
     // When loadButton is clicked, hide createFileBox
-    connect(ui->loadButton,
-            &QPushButton::clicked,
-            this,
-            &StartWindow::hideCreateFileBox);
+    connect(ui->loadButton, &QPushButton::clicked, this, &StartWindow::hideCreateFileBox);
 
     // When widthLineEdit is changed, check to enable setSizeButton
-    connect(ui->widthLineEdit,
-            &QLineEdit::textChanged,
-            this,
-            &StartWindow::validateInputs);
+    connect(ui->widthLineEdit, &QLineEdit::textChanged, this, &StartWindow::validateInputs);
 
     // When heightLineEdit is changed, check to enable setSizeButton
-    connect(ui->heightLineEdit,
-            &QLineEdit::textChanged,
-            this,
-            &StartWindow::validateInputs);
+    connect(ui->heightLineEdit, &QLineEdit::textChanged, this, &StartWindow::validateInputs);
 
     // When setSizeButton is clicked, update statusLabel
-    connect(ui->setSizeButton,
-            &QPushButton::clicked,
-            this,
-            &StartWindow::onSetSizeButtonClicked);
+    connect(ui->setSizeButton, &QPushButton::clicked, this, &StartWindow::onSetSizeButtonClicked);
 
     // When newButton is clicked, disable newButton
-    connect(ui->newButton,
-            &QPushButton::clicked,
-            this,
-            &StartWindow::disableNewButton);
+    connect(ui->newButton, &QPushButton::clicked, this, &StartWindow::disableNewButton);
 
     // When newButton is clicked, enable loadButton
-    connect(ui->newButton,
-            &QPushButton::clicked,
-            this,
-            &StartWindow::enableLoadButton);
+    connect(ui->newButton, &QPushButton::clicked, this, &StartWindow::enableLoadButton);
 
     // When loadButton is clicked, disable loadButton
-    connect(ui->loadButton,
-            &QPushButton::clicked,
-            this,
-            &StartWindow::disableLoadButton);
+    connect(ui->loadButton, &QPushButton::clicked, this, &StartWindow::disableLoadButton);
 
     // When loadButton is clicked, enable newButton
-    connect(ui->loadButton,
-            &QPushButton::clicked,
-            this,
-            &StartWindow::enableNewButton);
+    connect(ui->loadButton, &QPushButton::clicked, this, &StartWindow::enableNewButton);
 }
 
 // Destructor
-StartWindow::~StartWindow() {
+StartWindow::~StartWindow()
+{
     delete ui;
 }
 
 // Slot
-void StartWindow::hideWelcomeLabel() {
+void StartWindow::hideWelcomeLabel()
+{
     ui->welcomeLabel->setVisible(false);
 }
 
 // Slot
-void StartWindow::displayCreateFileBox() {
+void StartWindow::displayCreateFileBox()
+{
     ui->createFileBox->setVisible(true);
 }
 
 // Slot
-void StartWindow::hideCreateFileBox() {
+void StartWindow::hideCreateFileBox()
+{
     ui->createFileBox->setVisible(false);
 }
 
 // Slot
-void StartWindow::disableNewButton() {
+void StartWindow::disableNewButton()
+{
     ui->newButton->setEnabled(false);
 }
 
 // Slot
-void StartWindow::enableNewButton() {
+void StartWindow::enableNewButton()
+{
     ui->newButton->setEnabled(true);
 }
 
 // Slot
-void StartWindow::disableLoadButton() {
+void StartWindow::disableLoadButton()
+{
     ui->loadButton->setEnabled(false);
 }
 
 // Slot
-void StartWindow::enableLoadButton() {
+void StartWindow::enableLoadButton()
+{
     ui->loadButton->setEnabled(true);
 }
 
 // Slot
-void StartWindow::validateInputs() {
+void StartWindow::validateInputs()
+{
     // Check if both fields have non-empty values
     bool validWidth = !ui->widthLineEdit->text().isEmpty();
     bool validHeight = !ui->heightLineEdit->text().isEmpty();
@@ -151,7 +126,8 @@ void StartWindow::validateInputs() {
 }
 
 // Slot
-void StartWindow::onSetSizeButtonClicked() {
+void StartWindow::onSetSizeButtonClicked()
+{
     int width = ui->widthLineEdit->text().toInt();
     int height = ui->heightLineEdit->text().toInt();
 
