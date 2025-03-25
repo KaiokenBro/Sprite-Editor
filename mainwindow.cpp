@@ -39,43 +39,82 @@ MainWindow::MainWindow(QWidget *parent)
     ui->openButton->setEnabled(false);
 
     // When newButton is clicked, hide welcomeLabel
-    connect(ui->newButton, &QPushButton::clicked, this, &MainWindow::hideWelcomeLabel);
+    connect(ui->newButton,
+            &QPushButton::clicked,
+            this,
+            &MainWindow::hideWelcomeLabel);
 
     // When loadButton is clicked, hide welcomeLabel
-    connect(ui->loadButton, &QPushButton::clicked, this, &MainWindow::hideWelcomeLabel);
+    connect(ui->loadButton,
+            &QPushButton::clicked,
+            this,
+            &MainWindow::hideWelcomeLabel);
 
     // When newButton is clicked, display createFileBox
-    connect(ui->newButton, &QPushButton::clicked, this, &MainWindow::displayCreateFileBox);
+    connect(ui->newButton,
+            &QPushButton::clicked,
+            this,
+            &MainWindow::displayCreateFileBox);
 
     // When loadButton is clicked, hide createFileBox
-    connect(ui->loadButton, &QPushButton::clicked, this, &MainWindow::hideCreateFileBox);
+    connect(ui->loadButton,
+            &QPushButton::clicked,
+            this,
+            &MainWindow::hideCreateFileBox);
 
     // When widthLineEdit is changed, check to enable setSizeButton
-    connect(ui->widthLineEdit, &QLineEdit::textChanged, this, &MainWindow::validateInputs);
+    connect(ui->widthLineEdit,
+            &QLineEdit::textChanged,
+            this,
+            &MainWindow::validateInputs);
 
     // When heightLineEdit is changed, check to enable setSizeButton
-    connect(ui->heightLineEdit, &QLineEdit::textChanged, this, &MainWindow::validateInputs);
+    connect(ui->heightLineEdit,
+            &QLineEdit::textChanged,
+            this,
+            &MainWindow::validateInputs);
 
     // When setSizeButton is clicked, update statusLabel
-    connect(ui->setSizeButton, &QPushButton::clicked, this, &MainWindow::onSetSizeButtonClicked);
+    connect(ui->setSizeButton,
+            &QPushButton::clicked,
+            this,
+            &MainWindow::onSetSizeButtonClicked);
 
     // When newButton is clicked, disable newButton
-    connect(ui->newButton, &QPushButton::clicked, this, &MainWindow::disableNewButton);
+    connect(ui->newButton,
+            &QPushButton::clicked,
+            this,
+            &MainWindow::disableNewButton);
 
     // When newButton is clicked, enable loadButton
-    connect(ui->newButton, &QPushButton::clicked, this, &MainWindow::enableLoadButton);
+    connect(ui->newButton,
+            &QPushButton::clicked,
+            this,
+            &MainWindow::enableLoadButton);
 
     // When loadButton is clicked, enable newButton
-    connect(ui->loadButton, &QPushButton::clicked, this, &MainWindow::enableNewButton);
+    connect(ui->loadButton,
+            &QPushButton::clicked,
+            this,
+            &MainWindow::enableNewButton);
 
     // When createButton is clicked, openEditorWindow
-    connect(ui->createButton, &QPushButton::clicked, this, &MainWindow::openEditorWindow);
+    connect(ui->createButton,
+            &QPushButton::clicked,
+            this,
+            &MainWindow::openEditorWindow);
 
     // When loadButton is clicked, loadFile
-    connect(ui->loadButton, &QPushButton::clicked, this, &MainWindow::loadFile);
+    connect(ui->loadButton,
+            &QPushButton::clicked,
+            this,
+            &MainWindow::loadFile);
 
     // When openButton is clicked, openEditorWindow
-    connect(ui->openButton, &QPushButton::clicked, this, &MainWindow::openEditorWindow);
+    connect(ui->openButton,
+            &QPushButton::clicked,
+            this,
+            &MainWindow::openEditorWindow);
 }
 
 // Destructor
