@@ -10,6 +10,8 @@ CONFIG += c++17
 
 SOURCES += \
     editorwindow.cpp \
+    frame.cpp \
+    framemanager.cpp \
     main.cpp \
     mainwindow.cpp \
     previewwindow.cpp \
@@ -17,6 +19,8 @@ SOURCES += \
 
 HEADERS += \
     editorwindow.h \
+    frame.h \
+    framemanager.h \
     mainwindow.h \
     previewwindow.h \
     saveloadmanager.h
