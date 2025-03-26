@@ -12,16 +12,19 @@ SOURCES += \
     editorwindow.cpp \
     main.cpp \
     mainwindow.cpp \
+    previewwindow.cpp \
     saveloadmanager.cpp
 
 HEADERS += \
     editorwindow.h \
     mainwindow.h \
+    previewwindow.h \
     saveloadmanager.h
 
 FORMS += \
     editorwindow.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    previewwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

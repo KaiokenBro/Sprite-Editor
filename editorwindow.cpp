@@ -1,5 +1,6 @@
 #include "editorwindow.h"
 #include "ui_editorwindow.h"
+#include "previewwindow.h"
 
 #include <QGraphicsScene>
 #include <QGraphicsView>
@@ -22,4 +23,10 @@ EditorWindow::EditorWindow(int width, int height, QWidget *parent)
 EditorWindow::~EditorWindow()
 {
     delete ui;
+}
+
+void EditorWindow::animateClicked()
+{
+    previewwindow *preview = new previewwindow(this);
+    preview->show();
 }

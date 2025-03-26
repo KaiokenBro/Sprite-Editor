@@ -17,6 +17,9 @@ public:
     explicit EditorWindow(int width, int height, QWidget *parent = nullptr);
     ~EditorWindow();
 
+public slots:
+    void animateClicked();
+
 private:
     Ui::EditorWindow *ui;
 };
