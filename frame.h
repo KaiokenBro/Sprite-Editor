@@ -27,6 +27,12 @@ public:
      */
     Frame(int width, int height);
 
+    /*
+     * Getter method for pxels.
+     * @return The pixels vector.
+     */
+    std::vector<std::vector<QColor>> getPixels();
+
 public slots:
 
     /*

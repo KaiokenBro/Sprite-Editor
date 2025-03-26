@@ -20,3 +20,7 @@ void Frame::updateFrame(int rowIndex, int columnIndex, int red, int green, int b
     pixelToUpdate->setGreen(green);
     pixelToUpdate->setAlpha(alpha);
 };
+
+std::vector<std::vector<QColor>> Frame::getPixels() {
+    return pixels;
+}

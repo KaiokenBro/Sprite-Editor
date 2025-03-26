@@ -24,6 +24,6 @@ void FrameManager::updateCurrentFrame(int newCurrentFrame){
 
 void FrameManager::updateFrame(int rowIndex, int columnIndex, int red, int green, int blue, int alpha){
     frames.at(currentFrame).updateFrame(rowIndex, columnIndex, red, green, blue, alpha);
-    emit updatedFrame();
+    emit updatedFrame(frames.at(currentFrame).getPixels());
 }
 

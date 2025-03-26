@@ -59,7 +59,7 @@ signals:
     /*
      * Signal for the UI to reflect changes in the frame manager.
      */
-    void updatedFrame();
+    void updatedFrame(std::vector<std::vector<QColor>> getPixels());
 };
 
 #endif // FRAMEMANAGER_H
