@@ -19,8 +19,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    // Create a validator to restrict input to integers between 16 and 512
-    QIntValidator *validator = new QIntValidator(16, 512, this);
+    // Create a validator to restrict input to integers between 1 and 64
+    QIntValidator *validator = new QIntValidator(1, 64, this);
 
     // Apply validator to width and height input
     ui->widthLineEdit->setValidator(validator);
@@ -115,6 +115,19 @@ MainWindow::MainWindow(QWidget *parent)
             &QPushButton::clicked,
             this,
             &MainWindow::openEditorWindow);
+
+    // When widthLineEdit's value is changed, update heightLineEdit's value to reflect the same
+    connect(ui->widthLineEdit,
+            &QLineEdit::textChanged,
+            this,
+            &MainWindow::syncHeightToWidth);
+
+    // When heightLineEdit's value is changed, update widthLineEdit's value to reflect the same
+    connect(ui->heightLineEdit,
+            &QLineEdit::textChanged,
+            this,
+            &MainWindow::syncWidthToHeight);
+
 }
 
 // Destructor
@@ -174,7 +187,7 @@ void MainWindow::onSetSizeButtonClicked()
     int height = ui->heightLineEdit->text().toInt();
 
     // Check if both width and height are within the allowed range
-    if (width >= 16 && width <= 512 && height >= 16 && height <= 512) {
+    if (width >= 1 && width <= 64 && height >= 1 && height <= 64) {
         ui->statusLabel->setText("✅");
         ui->statusLabel->setStyleSheet("color: green; font-size: 18px;");
 
@@ -191,12 +204,15 @@ void MainWindow::onSetSizeButtonClicked()
     }
 }
 
-// Slot
+// Slot - Transitions to the editorwindow UI
 void MainWindow::openEditorWindow() {
+
+    int width = ui->widthLineEdit->text().toInt();
+    int height = ui->heightLineEdit->text().toInt();
 
     if (!editorWindow) {
         // Create the editor window
-        editorWindow = new EditorWindow(nullptr);
+        editorWindow = new EditorWindow(width, height, nullptr);
     }
 
     // Show the editor window
@@ -206,7 +222,7 @@ void MainWindow::openEditorWindow() {
     this->close();
 }
 
-// Slot
+// Slot - Opens file manager for selecting files to load
 void MainWindow::loadFile() {
 
     QString fileName
@@ -216,6 +232,7 @@ void MainWindow::loadFile() {
                                        "Image Files (*.png *.bmp *.jpg *.jpeg);;All Files (*.*)");
 
     if (!fileName.isEmpty()) {
+
         // Update the filePathLabel from the designer
         ui->filePathLabel->setText(fileName);
 
@@ -223,4 +240,18 @@ void MainWindow::loadFile() {
         ui->openButton->setEnabled(true);
     }
 
+}
+
+// Slot
+void MainWindow::syncHeightToWidth(const QString &text) {
+    if (ui->heightLineEdit->text() != text) {
+        ui->heightLineEdit->setText(text);
+    }
+}
+
+// Slot
+void MainWindow::syncWidthToHeight(const QString &text) {
+    if (ui->widthLineEdit->text() != text) {
+        ui->widthLineEdit->setText(text);
+    }
 }

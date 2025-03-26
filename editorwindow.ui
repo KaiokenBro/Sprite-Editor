@@ -7,23 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>689</height>
+    <height>705</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QGraphicsView" name="graphicsView">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>512</width>
-      <height>512</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QPushButton" name="saveButton">
     <property name="geometry">
      <rect>
@@ -314,6 +304,22 @@
     </property>
     <property name="text">
      <string>Preview Animation</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="spriteLabel">
+    <property name="geometry">
+     <rect>
+      <x>8</x>
+      <y>15</y>
+      <width>431</width>
+      <height>471</height>
+     </rect>
+    </property>
+    <property name="lineWidth">
+     <number>1</number>
+    </property>
+    <property name="text">
+     <string/>
     </property>
    </widget>
   </widget>

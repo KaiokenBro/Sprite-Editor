@@ -37,6 +37,8 @@ public slots:
     void enableLoadButton();
     void openEditorWindow();
     void loadFile();
+    void syncHeightToWidth(const QString &text);
+    void syncWidthToHeight(const QString &text);
 
 };
 
