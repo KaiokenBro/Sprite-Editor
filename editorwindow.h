@@ -4,24 +4,25 @@
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
-namespace Ui {
-class EditorWindow;
-}
+namespace Ui { class EditorWindow; }
 QT_END_NAMESPACE
 
-class EditorWindow : public QMainWindow
-{
+class EditorWindow : public QMainWindow {
     Q_OBJECT
 
 public:
-    explicit EditorWindow(int width, int height, QWidget *parent = nullptr);
+
+    explicit EditorWindow(QWidget *parent = nullptr);
     ~EditorWindow();
 
+private:
+
+    Ui::EditorWindow *ui;
+
 public slots:
+
     void animateClicked();
 
-private:
-    Ui::EditorWindow *ui;
 };
 
 #endif // EDITORWINDOW_H

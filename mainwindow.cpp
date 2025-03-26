@@ -118,56 +118,47 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 // Destructor
-MainWindow::~MainWindow()
-{
+MainWindow::~MainWindow() {
     delete ui;
 }
 
 // Slot
-void MainWindow::hideWelcomeLabel()
-{
+void MainWindow::hideWelcomeLabel() {
     ui->welcomeLabel->setVisible(false);
 }
 
 // Slot
-void MainWindow::displayCreateFileBox()
-{
+void MainWindow::displayCreateFileBox() {
     ui->createFileBox->setVisible(true);
 }
 
 // Slot
-void MainWindow::hideCreateFileBox()
-{
+void MainWindow::hideCreateFileBox() {
     ui->createFileBox->setVisible(false);
 }
 
 // Slot
-void MainWindow::disableNewButton()
-{
+void MainWindow::disableNewButton() {
     ui->newButton->setEnabled(false);
 }
 
 // Slot
-void MainWindow::enableNewButton()
-{
+void MainWindow::enableNewButton() {
     ui->newButton->setEnabled(true);
 }
 
 // Slot
-void MainWindow::disableLoadButton()
-{
+void MainWindow::disableLoadButton() {
     ui->loadButton->setEnabled(false);
 }
 
 // Slot
-void MainWindow::enableLoadButton()
-{
+void MainWindow::enableLoadButton() {
     ui->loadButton->setEnabled(true);
 }
 
 // Slot
-void MainWindow::validateInputs()
-{
+void MainWindow::validateInputs() {
     // Check if both fields have non-empty values
     bool validWidth = !ui->widthLineEdit->text().isEmpty();
     bool validHeight = !ui->heightLineEdit->text().isEmpty();
@@ -201,14 +192,11 @@ void MainWindow::onSetSizeButtonClicked()
 }
 
 // Slot
-void MainWindow::openEditorWindow()
-{
-    int width = ui->widthLineEdit->text().toInt();
-    int height = ui->heightLineEdit->text().toInt();
+void MainWindow::openEditorWindow() {
 
     if (!editorWindow) {
         // Create the editor window
-        editorWindow = new EditorWindow(width, height, nullptr);
+        editorWindow = new EditorWindow(nullptr);
     }
 
     // Show the editor window
@@ -219,8 +207,8 @@ void MainWindow::openEditorWindow()
 }
 
 // Slot
-void MainWindow::loadFile()
-{
+void MainWindow::loadFile() {
+
     QString fileName
         = QFileDialog::getOpenFileName(this,
                                        "Open Sprite File",
@@ -234,4 +222,5 @@ void MainWindow::loadFile()
         // Enable the openButton
         ui->openButton->setEnabled(true);
     }
+
 }
