@@ -75,6 +75,7 @@ EditorWindow::EditorWindow(int width, int height, QWidget *parent)
             this,
             &EditorWindow::alphaChanged);
 
+    color = QColor::fromRgb(0, 0, 0, 255);
 
 }
 
@@ -85,22 +86,22 @@ EditorWindow::~EditorWindow() {
 
 //Slot
 void EditorWindow::redChanged(int value) {
-
+    color.setRed(value);
 }
 
 //Slot
 void EditorWindow::blueChanged(int value) {
-
+    color.setBlue(value);
 }
 
 //Slot
 void EditorWindow::greenChanged(int value) {
-
+    color.setGreen(value);
 }
 
 //Slot
 void EditorWindow::alphaChanged(int value) {
-
+    color.setAlpha(value);
 }
 
 // Slot
@@ -204,7 +205,7 @@ bool EditorWindow::eventFilter(QObject *watched, QEvent *event) {
         if (x >= 0 && x < spriteWidth && y >= 0 && y < spriteHeight) {
 
             if (isDrawing) {
-                sprite.setPixelColor(x, y, Qt::red); // Replace with selected color later
+                sprite.setPixelColor(x, y, color); // Replace with selected color later
             }
 
             else if (isErasing) {

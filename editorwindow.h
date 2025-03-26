@@ -19,6 +19,7 @@ public:
     ~EditorWindow();
 
 private:
+    QColor color;
 
     Ui::EditorWindow *ui;
     QImage sprite;
