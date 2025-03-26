@@ -51,12 +51,56 @@ EditorWindow::EditorWindow(int width, int height, QWidget *parent)
             &QPushButton::clicked,
             this,
             &EditorWindow::enableEraser);
+    //When the red value changes, change the current color's red value
+    connect(ui->redSpinBox,
+            &QSpinBox::valueChanged,
+            this,
+            &EditorWindow::redChanged);
+
+    //When the blue value changes, change the current color's blue value
+    connect(ui->blueSpinBox,
+            &QSpinBox::valueChanged,
+            this,
+            &EditorWindow::blueChanged);
+
+    //When the green value changes, change the current color's green value
+    connect(ui->greenSpinBox,
+            &QSpinBox::valueChanged,
+            this,
+            &EditorWindow::greenChanged);
+
+    //When the alpha value changes, change the current color's alpha value
+    connect(ui->alphaSpinBox,
+            &QSpinBox::valueChanged,
+            this,
+            &EditorWindow::alphaChanged);
+
 
 }
 
 // Destructor
 EditorWindow::~EditorWindow() {
     delete ui;
+}
+
+//Slot
+void EditorWindow::redChanged(int value) {
+
+}
+
+//Slot
+void EditorWindow::blueChanged(int value) {
+
+}
+
+//Slot
+void EditorWindow::greenChanged(int value) {
+
+}
+
+//Slot
+void EditorWindow::alphaChanged(int value) {
+
 }
 
 // Slot
@@ -177,3 +221,5 @@ bool EditorWindow::eventFilter(QObject *watched, QEvent *event) {
     // Default behavior
     return QMainWindow::eventFilter(watched, event);
 }
+
+

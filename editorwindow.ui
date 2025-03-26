@@ -200,6 +200,9 @@
        <property name="maximum">
         <number>255</number>
        </property>
+       <property name="value">
+        <number>255</number>
+       </property>
        <property name="orientation">
         <enum>Qt::Orientation::Horizontal</enum>
        </property>
@@ -271,22 +274,25 @@
       </widget>
      </item>
      <item row="1" column="2">
-      <widget class="QSpinBox" name="greenSpinbox">
+      <widget class="QSpinBox" name="greenSpinBox">
        <property name="maximum">
         <number>255</number>
        </property>
       </widget>
      </item>
      <item row="2" column="2">
-      <widget class="QSpinBox" name="blueSpinbox">
+      <widget class="QSpinBox" name="blueSpinBox">
        <property name="maximum">
         <number>255</number>
        </property>
       </widget>
      </item>
      <item row="3" column="2">
-      <widget class="QSpinBox" name="alphaSpinbox">
+      <widget class="QSpinBox" name="alphaSpinBox">
        <property name="maximum">
+        <number>255</number>
+       </property>
+       <property name="value">
         <number>255</number>
        </property>
       </widget>
@@ -329,7 +335,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>
@@ -354,7 +360,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>greenSpinbox</sender>
+   <sender>greenSpinBox</sender>
    <signal>valueChanged(int)</signal>
    <receiver>greenSlider</receiver>
    <slot>setValue(int)</slot>
@@ -370,7 +376,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>blueSpinbox</sender>
+   <sender>blueSpinBox</sender>
    <signal>valueChanged(int)</signal>
    <receiver>blueSlider</receiver>
    <slot>setValue(int)</slot>
@@ -386,7 +392,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>alphaSpinbox</sender>
+   <sender>alphaSpinBox</sender>
    <signal>valueChanged(int)</signal>
    <receiver>alphaSlider</receiver>
    <slot>setValue(int)</slot>
@@ -420,7 +426,7 @@
   <connection>
    <sender>greenSlider</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>greenSpinbox</receiver>
+   <receiver>greenSpinBox</receiver>
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -436,7 +442,7 @@
   <connection>
    <sender>blueSlider</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>blueSpinbox</receiver>
+   <receiver>blueSpinBox</receiver>
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -452,7 +458,7 @@
   <connection>
    <sender>alphaSlider</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>alphaSpinbox</receiver>
+   <receiver>alphaSpinBox</receiver>
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">

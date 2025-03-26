@@ -42,7 +42,10 @@ public slots:
     void animateClicked();
     void enableDrawing();
     void enableEraser();
-
+    void redChanged(int value);
+    void greenChanged(int value);
+    void blueChanged(int value);
+    void alphaChanged(int value);
 };
 
 #endif // EDITORWINDOW_H
