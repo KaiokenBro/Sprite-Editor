@@ -94,34 +94,25 @@ EditorWindow::~EditorWindow() {
 //Slot
 void EditorWindow::redChanged(int value) {
     color.setRed(value);
-    //Really Really Horrible but it works, I will make this better when I have a chance.
-    ui->colorPreview->setStyleSheet("QLabel { background-color: rgba(" + QString::number(color.red()) + ", "
-                                    + QString::number(color.green()) + ", " + QString::number(color.blue())
-                                    + ", " + QString::number(color.alpha()) + "); }");
+    ui->colorPreview->setStyleSheet("QLabel { background-color: " + color.name(QColor::HexArgb) + "; }");
 }
 
 //Slot
 void EditorWindow::blueChanged(int value) {
     color.setBlue(value);
-    ui->colorPreview->setStyleSheet("QLabel { background-color: rgba(" + QString::number(color.red()) + ", "
-                                    + QString::number(color.green()) + ", " + QString::number(color.blue())
-                                    + ", " + QString::number(color.alpha()) + "); }");
+    ui->colorPreview->setStyleSheet("QLabel { background-color: " + color.name(QColor::HexArgb) + "; }");
 }
 
 //Slot
 void EditorWindow::greenChanged(int value) {
     color.setGreen(value);
-    ui->colorPreview->setStyleSheet("QLabel { background-color: rgba(" + QString::number(color.red()) + ", "
-                                    + QString::number(color.green()) + ", " + QString::number(color.blue())
-                                    + ", " + QString::number(color.alpha()) + "); }");
+    ui->colorPreview->setStyleSheet("QLabel { background-color: " + color.name(QColor::HexArgb) + "; }");
 }
 
 //Slot
 void EditorWindow::alphaChanged(int value) {
     color.setAlpha(value);
-    ui->colorPreview->setStyleSheet("QLabel { background-color: rgba(" + QString::number(color.red()) + ", "
-                                    + QString::number(color.green()) + ", " + QString::number(color.blue())
-                                    + ", " + QString::number(color.alpha()) + "); }");
+    ui->colorPreview->setStyleSheet("QLabel { background-color: " + color.name(QColor::HexArgb) + "; }");
 }
 
 // Slot
