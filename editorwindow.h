@@ -30,6 +30,7 @@ private:
 
     bool isDrawing = false;
     bool isErasing = false;
+    bool isGettingColor = false;
 
     void updateCanvas();
 
@@ -43,6 +44,7 @@ public slots:
     void animateClicked();
     void enableDrawing();
     void enableEraser();
+    void enableCopyColor();
     void redChanged(int value);
     void greenChanged(int value);
     void blueChanged(int value);

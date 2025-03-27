@@ -41,16 +41,23 @@ EditorWindow::EditorWindow(int width, int height, QWidget *parent)
     ui->spriteLabel->installEventFilter(this);
 
     // When drawButton clicked, enable drawing
-    connect(ui->drawButton,
+    connect(ui->copyButton,
             &QPushButton::clicked,
             this,
-            &EditorWindow::enableDrawing);
+            &EditorWindow::enableCopyColor);
 
     // When eraserButton clicked, enable erasing
     connect(ui->eraserButton,
             &QPushButton::clicked,
             this,
             &EditorWindow::enableEraser);
+
+    // When drawButton clicked, enable drawing
+    connect(ui->drawButton,
+            &QPushButton::clicked,
+            this,
+            &EditorWindow::enableDrawing);
+
     //When the red value changes, change the current color's red value
     connect(ui->redSpinBox,
             &QSpinBox::valueChanged,
@@ -87,32 +94,55 @@ EditorWindow::~EditorWindow() {
 //Slot
 void EditorWindow::redChanged(int value) {
     color.setRed(value);
+    //Really Really Horrible but it works, I will make this better when I have a chance.
+    ui->colorPreview->setStyleSheet("QLabel { background-color: rgba(" + QString::number(color.red()) + ", "
+                                    + QString::number(color.green()) + ", " + QString::number(color.blue())
+                                    + ", " + QString::number(color.alpha()) + "); }");
 }
 
 //Slot
 void EditorWindow::blueChanged(int value) {
     color.setBlue(value);
+    ui->colorPreview->setStyleSheet("QLabel { background-color: rgba(" + QString::number(color.red()) + ", "
+                                    + QString::number(color.green()) + ", " + QString::number(color.blue())
+                                    + ", " + QString::number(color.alpha()) + "); }");
 }
 
 //Slot
 void EditorWindow::greenChanged(int value) {
     color.setGreen(value);
+    ui->colorPreview->setStyleSheet("QLabel { background-color: rgba(" + QString::number(color.red()) + ", "
+                                    + QString::number(color.green()) + ", " + QString::number(color.blue())
+                                    + ", " + QString::number(color.alpha()) + "); }");
 }
 
 //Slot
 void EditorWindow::alphaChanged(int value) {
     color.setAlpha(value);
+    ui->colorPreview->setStyleSheet("QLabel { background-color: rgba(" + QString::number(color.red()) + ", "
+                                    + QString::number(color.green()) + ", " + QString::number(color.blue())
+                                    + ", " + QString::number(color.alpha()) + "); }");
 }
 
 // Slot
 void EditorWindow::enableDrawing() {
     isDrawing = true;
+    isErasing = false;
+    isGettingColor = false;
 }
 
 // Slot
 void EditorWindow::enableEraser() {
     isErasing = true;
     isDrawing = false;
+    isGettingColor = false;
+}
+
+//Slot
+void EditorWindow::enableCopyColor() {
+    isGettingColor = true;
+    isDrawing = false;
+    isErasing = false;
 }
 
 // Slot
@@ -209,7 +239,17 @@ bool EditorWindow::eventFilter(QObject *watched, QEvent *event) {
             }
 
             else if (isErasing) {
-                sprite.setPixelColor(x, y, Qt::white); // Default "erase to white"
+                sprite.setPixelColor(x, y, QColor::fromRgb(255, 255, 255, 0)); // Default "erase to transparent"
+            }
+
+            else if (isGettingColor) {
+                color = sprite.pixelColor(x, y);
+
+                //Set correct values in UI (Should we do this with signal/slots somehow?)
+                ui->blueSpinBox->setValue(color.blue());
+                ui->redSpinBox->setValue(color.red());
+                ui->greenSpinBox->setValue(color.green());
+                ui->alphaSpinBox->setValue(color.alpha());
             }
 
             updateCanvas();
