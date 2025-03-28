@@ -1,11 +1,21 @@
 #include "previewwindow.h"
 #include "ui_previewwindow.h"
 
-previewwindow::previewwindow(QWidget *parent)
+previewwindow::previewwindow(int height, int width, FrameManager *frameManager, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::previewwindow)
+    , actualHeight(height)
+    , actualWidth(width)
+    , frameManager(frameManager)
+    , sprite(QImage(actualWidth, actualHeight, QImage::Format_ARGB32))
 {
     ui->setupUi(this);
+
+    // connect(this,
+    //         &previewwindow::getPixelsOfFrame,
+    //         frameManager,
+    //         &FrameManager::foundFrame);
+
 }
 
 previewwindow::~previewwindow()
@@ -23,17 +33,81 @@ void previewwindow::animation()
 
 void previewwindow::animate(bool animate, int fps)
 {
-    int frame = 0;
-    while(animate){
-        animate = ui->animateButton->isChecked();
+    int nextFrame = 0;
+    nextFrame ++;
+    std::vector<Frame> frames = frameManager->frames;
+    // std::cout << frames.at(nextFrame) << std::endl;
+    // while(animate){
+    //     animate = ui->animateButton->isChecked();
+    //     fps = ui->fpsSlider->value();
+    //     std::cout << animate << std::endl;
+    //     std::cout << fps << std::endl;
+    //     QTimer::singleShot(1000/fps, this, [this, frame] () {showFrame(frame); });
+    //     animate = false;
+    // }
+    for(auto frame : frames){
         fps = ui->fpsSlider->value();
-        std::cout << animate << std::endl;
-        std::cout << fps << std::endl;
-        QTimer::singleShot(1000/fps, this, [this, frame] () {showFrame(frame); });
-        animate = false;
+        QTimer::singleShot((1000*nextFrame)/fps, this, [this, frame] () {showFrame(frame); });
+        nextFrame++;
     }
 }
-void previewwindow::showFrame(int frame)
+void previewwindow::showFrame(Frame frame)
 {
-    std::cout << "showFrame" << std::endl;
+    std::vector<std::vector<QColor>> pixels = frame.getPixels();
+    // Dimensions of the QLabel display area
+    int labelWidth = ui->spriteLabel->width();
+    int labelHeight = ui->spriteLabel->height();
+
+    // Calculate pixel size so the sprite fits inside the label
+    int pixelWidth = labelWidth / actualWidth;
+    int pixelHeight = labelHeight / actualHeight;
+    int pixelSize = std::max(1, std::min(pixelWidth, pixelHeight));
+
+    // Calculate the total size of the scaled sprite
+    int totalWidth = pixelSize * actualWidth;
+    int totalHeight = pixelSize * actualHeight;
+
+    // Center the drawing on the QLabel
+    int offsetX = (labelWidth - totalWidth) / 2;
+    int offsetY = (labelHeight - totalHeight) / 2;
+
+    // Create the visual canvas image (what the user sees)
+    QPixmap canvas(labelWidth, labelHeight);
+
+    // Set background color to White
+    canvas.fill(Qt::white);
+
+    QPainter painter(&canvas);
+
+    // QColor savedColor = color;
+
+    for (int y = 0; y < actualHeight; ++y) {
+        for (int x = 0; x < actualWidth; ++x) {
+            QColor color = pixels.at(y).at(x);
+            sprite.setPixelColor(x, y, color);
+        }
+    }
+    // color = savedColor;
+
+    // Draw each pixel from the logical sprite onto the canvas
+    for (int y = 0; y < actualHeight; ++y) {
+        for (int x = 0; x < actualWidth; ++x) {
+            // Get color at (x, y)
+            QColor color = sprite.pixelColor(x, y);
+            QRect rect(offsetX + x * pixelSize, offsetY + y * pixelSize, pixelSize, pixelSize);
+
+            // Fill pixel
+            painter.fillRect(rect, color);
+
+            // Draw grid
+            painter.setPen(Qt::gray);
+            painter.drawRect(rect);
+        }
+
+    }
+
+    // Update the QLabel with the new canvas image
+    ui->spriteLabel->setPixmap(canvas);
 }
+
+

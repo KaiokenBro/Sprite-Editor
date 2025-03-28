@@ -97,14 +97,17 @@
      <number>1</number>
     </property>
    </widget>
-   <widget class="QGraphicsView" name="spriteDisplay">
+   <widget class="QLabel" name="spriteLabel">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>20</y>
-      <width>661</width>
-      <height>431</height>
+      <x>90</x>
+      <y>60</y>
+      <width>541</width>
+      <height>301</height>
      </rect>
+    </property>
+    <property name="text">
+     <string/>
     </property>
    </widget>
   </widget>

@@ -20,6 +20,7 @@ EditorWindow::EditorWindow(FrameManager *frameManager, int width, int height, QW
     , ui(new Ui::EditorWindow)  // Initialize UI pointer
     , spriteWidth(width)        // Store user-defined width
     , spriteHeight(height)      // Store user-defined height
+    , frameManager(frameManager)
 {
 
     // Set up UI components
@@ -195,7 +196,7 @@ void EditorWindow::enableCopyColor() {
 void EditorWindow::animateClicked() {
 
     // Create preview window
-    previewwindow *preview = new previewwindow(this);
+    previewwindow *preview = new previewwindow(spriteHeight, spriteWidth, frameManager, this);
 
     // Show preview window
     preview->show();

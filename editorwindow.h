@@ -32,6 +32,7 @@ private:
     bool isDrawing = false;
     bool isErasing = false;
     bool isGettingColor = false;
+    FrameManager *frameManager;
 
     void updateCanvas();
 
