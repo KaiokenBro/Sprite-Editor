@@ -1,13 +1,18 @@
 #include "frame.h"
 
-Frame::Frame() : width(0), height(0){}
+Frame::Frame() : height(0), width(0){}
 
-Frame::Frame(int width, int height) : width(width), height(height){
+Frame::Frame(int height, int width) : height(height), width(width){
     for(int i = 0; i < height; i++){
         std::vector<QColor> pixelsRow;
         for(int j = 0; j < width; j++){
-            QColor blankPixel;
-            pixelsRow.push_back(blankPixel);
+            QColor newPixel;
+            // New pixels must be white and transparent.
+            newPixel.setRed(255);
+            newPixel.setBlue(255);
+            newPixel.setGreen(255);
+            newPixel.setAlpha(0);
+            pixelsRow.push_back(newPixel);
         }
         pixels.push_back(pixelsRow);
     }

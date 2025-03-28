@@ -2,6 +2,7 @@
 #define EDITORWINDOW_H
 
 #include <QMainWindow>
+#include "framemanager.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class EditorWindow; }
@@ -13,7 +14,7 @@ class EditorWindow : public QMainWindow {
 public:
 
     // Constructor
-    explicit EditorWindow(int width, int height, QWidget *parent = nullptr);
+    explicit EditorWindow(FrameManager *frameManager, int width, int height, QWidget *parent = nullptr);
 
     // Destructor
     ~EditorWindow();
@@ -49,6 +50,17 @@ public slots:
     void greenChanged(int value);
     void blueChanged(int value);
     void alphaChanged(int value);
+    void addFrameToStack(int frameNumber);
+    void deleteFrameFromStack();
+    void switchCanvas(std::vector<std::vector<QColor>> pixels);
+    void getSelectedFrame();
+    void getSelectedFrameToCopy();
+
+signals:
+    void deleteFrame(int frameIndex);
+    void updatePixelInFrame(int frameIndex, int rowIndex, int columnIndex, int red, int green, int blue, int alpha);
+    void getPixels(int frameIndex);
+    void selectedFrameToCopy(int frameIndex);
 };
 
 #endif // EDITORWINDOW_H

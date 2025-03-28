@@ -8,44 +8,45 @@
 class FrameManager : public QObject
 {
     Q_OBJECT
-private:
-    // The index for the current frame in the frame manager.
-    int currentFrame;
+public:
     // The existing frames in the frame manager.
     std::vector<Frame> frames;
+    // Height of the frame in pixels
+    int height;
+    // Width of each frame in pixels
+    int width;
 
 public:
-    /*
-     * The constructor to create a frame manger. This constructor requires one frame to be added because the
-     * frame manager must have one existing frame.
-     * @param frameToAdd - A frame added to the frame manager.
-     */
-    FrameManager(Frame frameToAdd);
+    explicit FrameManager(int height, int width, QObject *parent = nullptr);
+
 public slots:
+    // /*
+    //  * This method adds an existing frame to the end of the frame manager.
+    //  * @param frameToAdd - The frame to be added to the frame manager.
+    //  */
+    // void addFrame(Frame frameToAdd);
+
     /*
-     * This method adds an existing frame to the end of the frame manager.
+     * This method adds a new frame to the frame manager. The frame is always added to the end.
      * @param frameToAdd - The frame to be added to the frame manager.
      */
-    void addFrame(Frame frameToAdd);
+    void addFrame();
 
     /*
      * This method deletes the current frame selected from the frame manager.
+     * @param frameIndex - The index of the frame to update.
      */
-    void deleteFrame();
+    void deleteFrame(int frameIndex);
 
     /*
      * This method copies the current frame selected and adds it to the end of the frame manager.
+     * @param frameIndex - The index of the frame to update.
      */
-    void copyFrame();
+    void copyFrame(int frameIndex);
 
     /*
-     * This method updates the index of the current frame selected.
-     * @param newCurrentFrame - An int representing the index of the new current frame.
-     */
-    void updateCurrentFrame(int newCurrentFrame);
-
-    /*
-     * This method updates a pixel in the current frame.
+     * This method updates a pixel in a specified frame.
+     * @param frameIndex - The index of the frame to update.
      * @param rowIndex - The row of the updated pixel.
      * @param columnIndex - The column of the updated pixel.
      * @param red - The red value for the updated pixel.
@@ -53,13 +54,20 @@ public slots:
      * @param blue - The blue value for the updated pixel.
      * @param alpha - The alpha value for the updated pixel.
      */
-    void updateFrame(int rowIndex, int columnIndex, int red, int green, int blue, int alpha);
+    void updateFrame(int frameIndex, int rowIndex, int columnIndex, int red, int green, int blue, int alpha);
+
+    void getPixelsForFrame(int frameIndex);
 
 signals:
     /*
-     * Signal for the UI to reflect changes in the frame manager.
+     * Send stored pixels of a frame to the canvas.
      */
-    void updatedFrame(std::vector<std::vector<QColor>> pixels);
+    void foundFrame(std::vector<std::vector<QColor>> pixels);
+
+    /*
+     * Let the UI know the number of existing frames.
+     */
+    void frameAdded(int framesCount);
 };
 
 #endif // FRAMEMANAGER_H

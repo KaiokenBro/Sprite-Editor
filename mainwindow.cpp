@@ -212,7 +212,9 @@ void MainWindow::openEditorWindow() {
 
     if (!editorWindow) {
         // Create the editor window
-        editorWindow = new EditorWindow(width, height, nullptr);
+        FrameManager *frameManager = new FrameManager(height, width, this);
+        editorWindow = new EditorWindow(frameManager, width, height, nullptr);
+        frameManager->setParent(editorWindow);
     }
 
     // Show the editor window
