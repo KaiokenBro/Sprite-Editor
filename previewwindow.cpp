@@ -1,6 +1,15 @@
 #include "previewwindow.h"
 #include "ui_previewwindow.h"
 
+/**
+ * @file previewwindow.cpp
+ * @authors Samuel Garcia,
+ *
+ * @brief This file handles the preview window and the animation of the sprite.
+ *
+ * @date 03/23/2025
+ */
+
 previewwindow::previewwindow(int height, int width, FrameManager *frameManager, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::previewwindow)
@@ -10,11 +19,6 @@ previewwindow::previewwindow(int height, int width, FrameManager *frameManager, 
     , sprite(QImage(actualWidth, actualHeight, QImage::Format_ARGB32))
 {
     ui->setupUi(this);
-
-    // connect(this,
-    //         &previewwindow::getPixelsOfFrame,
-    //         frameManager,
-    //         &FrameManager::foundFrame);
 
 }
 
@@ -26,37 +30,34 @@ previewwindow::~previewwindow()
 void previewwindow::animation()
 {
     bool animateBool = ui->animateButton->isChecked();
-    int fps = ui->fpsSlider->value();
-    animate(animateBool, fps);
+    animate(animateBool);
 
 }
 
-void previewwindow::animate(bool animate, int fps)
+void previewwindow::animate(bool animationBool)
 {
-    int nextFrame = 0;
-    nextFrame ++;
     std::vector<Frame> frames = frameManager->frames;
-    // std::cout << frames.at(nextFrame) << std::endl;
-    // while(animate){
-    //     animate = ui->animateButton->isChecked();
-    //     fps = ui->fpsSlider->value();
-    //     std::cout << animate << std::endl;
-    //     std::cout << fps << std::endl;
-    //     QTimer::singleShot(1000/fps, this, [this, frame] () {showFrame(frame); });
-    //     animate = false;
-    // }
-    for(auto frame : frames){
-        fps = ui->fpsSlider->value();
-        QTimer::singleShot((1000*nextFrame)/fps, this, [this, frame] () {showFrame(frame); });
-        nextFrame++;
+    while(animationBool){
+        for(const Frame& frame : frames){
+            showFrame(frame);
+        }
+        animationBool = ui->animateButton->isChecked();
     }
 }
+
 void previewwindow::showFrame(Frame frame)
 {
     std::vector<std::vector<QColor>> pixels = frame.getPixels();
     // Dimensions of the QLabel display area
     int labelWidth = ui->spriteLabel->width();
     int labelHeight = ui->spriteLabel->height();
+
+    // Sets the size to pixel size of the radio button is checked.
+    bool actualSize = ui->actualSizeRadio->isChecked();
+    if(actualSize){
+        labelWidth = actualWidth;
+        labelHeight = actualHeight;
+    }
 
     // Calculate pixel size so the sprite fits inside the label
     int pixelWidth = labelWidth / actualWidth;
@@ -79,7 +80,6 @@ void previewwindow::showFrame(Frame frame)
 
     QPainter painter(&canvas);
 
-    // QColor savedColor = color;
 
     for (int y = 0; y < actualHeight; ++y) {
         for (int x = 0; x < actualWidth; ++x) {
@@ -87,7 +87,6 @@ void previewwindow::showFrame(Frame frame)
             sprite.setPixelColor(x, y, color);
         }
     }
-    // color = savedColor;
 
     // Draw each pixel from the logical sprite onto the canvas
     for (int y = 0; y < actualHeight; ++y) {
@@ -98,16 +97,17 @@ void previewwindow::showFrame(Frame frame)
 
             // Fill pixel
             painter.fillRect(rect, color);
-
-            // Draw grid
-            painter.setPen(Qt::gray);
-            painter.drawRect(rect);
         }
 
     }
 
     // Update the QLabel with the new canvas image
     ui->spriteLabel->setPixmap(canvas);
+    QEventLoop loop;
+    QTimer timer;
+    QObject::connect(&timer, &QTimer::timeout, &loop, &QEventLoop::quit);
+    timer.start(1000/ui->fpsSlider->sliderPosition());
+    loop.exec();
 }
 
 
