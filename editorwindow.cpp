@@ -339,9 +339,8 @@ void EditorWindow::deleteFrameFromStack() {
         // There should always be at least 1 frame.
         if (ui->frameStackWidget->count() > 1) {
             int frameIndex = ui->frameStackWidget->row(selectedItem);
-            emit deleteFrame(frameIndex);
             delete ui->frameStackWidget->takeItem(frameIndex);
-
+            emit deleteFrame(frameIndex);
             // Update the frame names upon successful deletion.
             for (int i = 0; i < ui->frameStackWidget->count(); ++i) {
                 QListWidgetItem *item = ui->frameStackWidget->item(i);
