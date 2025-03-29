@@ -6,6 +6,7 @@
 #include <QPainter>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QString>
 
 using std::min;
 using std::max;
@@ -14,9 +15,9 @@ using std::max;
 EditorWindow::EditorWindow(FrameManager *frameManager, int width, int height, QWidget *parent) :
     QMainWindow(parent),       // Call base QMainWindow constructor
     ui(new Ui::EditorWindow),  // Initialize UI pointer
-    spriteWidth(width),        // Store user-defined width
-    spriteHeight(height),      // Store user-defined height
-    frameManager(frameManager)
+    frameManager(frameManager),
+    spriteWidth(width),             // Store user-defined width
+    spriteHeight(height)          // Store user-defined height
 {
 
     // Set up UI components
@@ -179,14 +180,20 @@ void EditorWindow::onSaveButtonClicked() {
     // Open a file save dialog and let the user pick a path to save the JSON file.
     // The dialog title is "Save Sprite File", and it filters for .json files.
     QString filePath = QFileDialog::getSaveFileName(
-        this,                       // Parent widget (EditorWindow)
-        "Save Sprite File",         // Title of the dialog
-        "",                         // Default directory (empty = current)
-        "JSON Files (*.json)"       // File filter
+        this,                           // Parent widget (EditorWindow)
+        "Save Sprite File",             // Title of the dialog
+        "",                             // Default directory (empty = current)
+        "Sprite Save Files (*.ssp)"     // File filter
         );
 
     // Check if the user selected a file (didn't cancel the dialog)
     if (!filePath.isEmpty()) {
+
+        // Ensure the file has a .ssp extension
+        if (!filePath.endsWith(".ssp", Qt::CaseInsensitive)) {
+            filePath += ".ssp";
+        }
+
         bool success = saveLoadManager->saveToFile(*frameManager, filePath);
 
         // If the save was successful, show a success message
@@ -470,34 +477,6 @@ bool EditorWindow::eventFilter(QObject *watched, QEvent *event) {
                 }
             }
 
-            else if (isErasing) {
-
-                sprite.setPixelColor(x, y, QColor::fromRgb(255, 255, 255, 0)); // Default "erase to transparent"
-
-                // Update frame in frame manager.
-                QListWidgetItem *selectedItem = ui->frameStackWidget->currentItem();
-
-                if (selectedItem) {
-                    int frameIndex = ui->frameStackWidget->row(selectedItem);
-                    emit updatePixelInFrame(frameIndex, y, x, 255, 255, 255, 0);
-                }
-
-                else {
-                    int frameIndex = 0;
-                    emit updatePixelInFrame(frameIndex, y, x, 255, 255, 255, 0);
-                }
-            }
-
-            else if (isGettingColor) {
-
-                color = sprite.pixelColor(x, y);
-
-                //Set correct values in UI (Should we do this with signal/slots somehow?)
-                ui->blueSpinBox->setValue(color.blue());
-                ui->redSpinBox->setValue(color.red());
-                ui->greenSpinBox->setValue(color.green());
-                ui->alphaSpinBox->setValue(color.alpha());
-            }
 
             updateCanvas();
         }

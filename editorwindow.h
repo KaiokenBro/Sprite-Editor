@@ -22,10 +22,10 @@ public:
 
 private:
 
+    Ui::EditorWindow *ui;
     FrameManager *frameManager;
     SaveLoadManager* saveLoadManager;
 
-    Ui::EditorWindow *ui;
     QColor color;
     QImage sprite;
 

@@ -4,12 +4,8 @@
 
 #include <QFileDialog>
 #include <QIntValidator>
-
-// Pattern
-// connect(WhatIsEmittingTheSignal,
-//        WhichSignalIsIt,
-//        WhatHasASlot,
-//        WhichSlotIsIt);
+#include <QMessageBox>
+#include <QString>
 
 // Constructor
 MainWindow::MainWindow(QWidget *parent) :
@@ -199,21 +195,30 @@ void MainWindow::syncWidthToHeight(const QString &text) {
     }
 }
 
-// Slot - Opens file manager for selecting files to load
+// Slot - Opens file manager for selecting .ssp files to load
 void MainWindow::loadFile() {
 
-    QString fileName
-        = QFileDialog::getOpenFileName(this,
-                                       "Open Sprite File",
-                                       QDir::homePath(),
-                                       "Image Files (*.png *.bmp *.jpg *.jpeg);;All Files (*.*)");
+    // Open a file dialog to select only .ssp files
+    QString fileName = QFileDialog::getOpenFileName(
+        this,                               // Parent widget
+        "Open Sprite File",                 // Dialog title
+        QDir::homePath(),                   // Default directory
+        "Sprite Save Files (*.ssp)"         // File filter
+    );
 
+    // If the user selects a file
     if (!fileName.isEmpty()) {
 
-        // Update the filePathLabel from the designer
+        // Ensure the file has the .ssp extension
+        if (!fileName.endsWith(".ssp", Qt::CaseInsensitive)) {
+            QMessageBox::warning(this, "Invalid File", "Please select a valid .ssp file.");
+            return;  // Reject invalid files
+        }
+
+        // Update the file path label
         ui->filePathLabel->setText(fileName);
 
-        // Enable the openButton
+        // Enable the "Open" button now that a valid file is selected
         ui->openButton->setEnabled(true);
     }
 
