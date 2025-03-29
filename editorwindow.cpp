@@ -45,6 +45,8 @@ EditorWindow::EditorWindow(FrameManager *frameManager, int width, int height, QW
     frameManager->addFrame();
     addFrameToStack(1);
 
+    color = QColor::fromRgb(0, 0, 0, 255);
+
     // When drawButton clicked, enable drawing
     connect(ui->copyButton,
             &QPushButton::clicked,
@@ -139,7 +141,6 @@ EditorWindow::EditorWindow(FrameManager *frameManager, int width, int height, QW
             frameManager,
             &FrameManager::copyFrame);
 
-    color = QColor::fromRgb(0, 0, 0, 255);
 }
 
 // Destructor
@@ -282,13 +283,17 @@ bool EditorWindow::eventFilter(QObject *watched, QEvent *event) {
         if (x >= 0 && x < spriteWidth && y >= 0 && y < spriteHeight) {
 
             if (isDrawing) {
+
                 sprite.setPixelColor(x, y, color); // Replace with selected color later
+
                 // Update frame in frame manager.
                 QListWidgetItem *selectedItem = ui->frameStackWidget->currentItem();
+
                 if (selectedItem) {
                     int frameIndex = ui->frameStackWidget->row(selectedItem);
                     emit updatePixelInFrame(frameIndex, y, x, color.red(), color.green(), color.blue(), color.alpha());
                 }
+
                 else {
                     int frameIndex = 0;
                     emit updatePixelInFrame(frameIndex, y, x, color.red(), color.green(), color.blue(), color.alpha());
@@ -296,13 +301,17 @@ bool EditorWindow::eventFilter(QObject *watched, QEvent *event) {
             }
 
             else if (isErasing) {
+
                 sprite.setPixelColor(x, y, QColor::fromRgb(255, 255, 255, 0)); // Default "erase to transparent"
+
                 // Update frame in frame manager.
                 QListWidgetItem *selectedItem = ui->frameStackWidget->currentItem();
+
                 if (selectedItem) {
                     int frameIndex = ui->frameStackWidget->row(selectedItem);
                     emit updatePixelInFrame(frameIndex, y, x, 255, 255, 255, 0);
                 }
+
                 else {
                     int frameIndex = 0;
                     emit updatePixelInFrame(frameIndex, y, x, 255, 255, 255, 0);
@@ -310,6 +319,7 @@ bool EditorWindow::eventFilter(QObject *watched, QEvent *event) {
             }
 
             else if (isGettingColor) {
+
                 color = sprite.pixelColor(x, y);
 
                 //Set correct values in UI (Should we do this with signal/slots somehow?)
@@ -336,12 +346,16 @@ void EditorWindow::addFrameToStack(int frameNumber) {
 
 void EditorWindow::deleteFrameFromStack() {
     QListWidgetItem *selectedItem = ui->frameStackWidget->currentItem();
+
     if (selectedItem) {
+
         // There should always be at least 1 frame.
         if (ui->frameStackWidget->count() > 1) {
+
             int frameIndex = ui->frameStackWidget->row(selectedItem);
             delete ui->frameStackWidget->takeItem(frameIndex);
             emit deleteFrame(frameIndex);
+
             // Update the frame names upon successful deletion.
             for (int i = 0; i < ui->frameStackWidget->count(); ++i) {
                 QListWidgetItem *item = ui->frameStackWidget->item(i);
@@ -352,6 +366,7 @@ void EditorWindow::deleteFrameFromStack() {
 }
 
 void EditorWindow::switchCanvas(std::vector<std::vector<QColor>> pixels) {
+
     // Dimensions of the QLabel display area
     int labelWidth = ui->spriteLabel->width();
     int labelHeight = ui->spriteLabel->height();
@@ -380,16 +395,20 @@ void EditorWindow::switchCanvas(std::vector<std::vector<QColor>> pixels) {
     QColor savedColor = color;
 
     for (int y = 0; y < spriteHeight; ++y) {
+
         for (int x = 0; x < spriteWidth; ++x) {
             color = pixels.at(y).at(x);
             sprite.setPixelColor(x, y, color);
         }
     }
+
     color = savedColor;
 
     // Draw each pixel from the logical sprite onto the canvas
     for (int y = 0; y < spriteHeight; ++y) {
+
         for (int x = 0; x < spriteWidth; ++x) {
+
             // Get color at (x, y)
             QColor color = sprite.pixelColor(x, y);
             QRect rect(offsetX + x * pixelSize, offsetY + y * pixelSize, pixelSize, pixelSize);
@@ -401,7 +420,6 @@ void EditorWindow::switchCanvas(std::vector<std::vector<QColor>> pixels) {
             painter.setPen(Qt::gray);
             painter.drawRect(rect);
         }
-
     }
 
     // Update the QLabel with the new canvas image
@@ -410,6 +428,7 @@ void EditorWindow::switchCanvas(std::vector<std::vector<QColor>> pixels) {
 
 void EditorWindow::getSelectedFrame() {
     QListWidgetItem *selectedItem = ui->frameStackWidget->currentItem();
+
     if (selectedItem) {
         int frameIndex = ui->frameStackWidget->row(selectedItem);
         emit getPixels(frameIndex);
@@ -418,6 +437,7 @@ void EditorWindow::getSelectedFrame() {
 
 void EditorWindow::getSelectedFrameToCopy() {
     QListWidgetItem *selectedItem = ui->frameStackWidget->currentItem();
+
     if (selectedItem) {
         int frameIndex = ui->frameStackWidget->row(selectedItem);
         emit selectedFrameToCopy(frameIndex);

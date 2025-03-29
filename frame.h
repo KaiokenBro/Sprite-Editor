@@ -3,17 +3,22 @@
 
 #include <QColor>
 
-class Frame
-{
+class Frame {
+
 private:
+
     // The frame pixels. Each element is a row of pixels. Pixels are represented by QColor objects, which
     // have RGBA values.
     std::vector<std::vector<QColor>> pixels;
+
     // Height of the frame in pixels.
     int height;
+
     // Width of the frame in pixels.
     int width;
+
 public:
+
     /*
      * This method updates a pixel in the frame.
      * @param rowIndex - The row of the updated pixel.
@@ -43,6 +48,7 @@ public:
      * @return The pixels vector.
      */
     std::vector<std::vector<QColor>> getPixels();
+
 };
 
 #endif // FRAME_H

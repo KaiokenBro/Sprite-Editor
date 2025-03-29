@@ -17,19 +17,35 @@
  * @date 03/23/2025
  */
 
-namespace Ui {
-class previewwindow;
-}
+namespace Ui { class previewwindow; }
 
-class previewwindow : public QMainWindow
-{
+class previewwindow : public QMainWindow {
     Q_OBJECT
 
 public:
+
     explicit previewwindow(int spriteHeight, int spriteWidth, FrameManager *frameManager, QWidget *parent = nullptr);
+
     ~previewwindow();
 
+private:
+
+    Ui::previewwindow *ui;
+
+    //Actual height of the sprite
+    int actualHeight;
+
+    //Actual width of the sprite
+    int actualWidth;
+
+    //Pointer to the frame manager to get the frames
+    FrameManager * frameManager;
+
+    //Blank QImage to be used to draw the sprite
+    QImage sprite;
+
 public slots:
+
     /*
      * Toggles the animation on to be looped through until it is stopped
      */
@@ -47,16 +63,6 @@ public slots:
      */
     void animate(bool);
 
-private:
-    Ui::previewwindow *ui;
-    //Actual height of the sprite
-    int actualHeight;
-    //Actual width of the sprite
-    int actualWidth;
-    //Pointer to the frame manager to get the frames
-    FrameManager * frameManager;
-    //Blank QImage to be used to draw the sprite
-    QImage sprite;
 };
 
 #endif // PREVIEWWINDOW_H

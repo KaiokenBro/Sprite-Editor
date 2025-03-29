@@ -19,42 +19,39 @@ previewwindow::previewwindow(int height, int width, FrameManager *frameManager, 
     , sprite(QImage(actualWidth, actualHeight, QImage::Format_ARGB32))
 {
     ui->setupUi(this);
-
 }
 
-previewwindow::~previewwindow()
-{
+previewwindow::~previewwindow() {
     delete ui;
 }
 
-void previewwindow::animation()
-{
+void previewwindow::animation() {
     bool animateBool = ui->animateButton->isChecked();
     animate(animateBool);
-
 }
 
-void previewwindow::animate(bool animationBool)
-{
+void previewwindow::animate(bool animationBool) {
     std::vector<Frame> frames = frameManager->frames;
-    while(animationBool){
-        for(const Frame& frame : frames){
+
+    while (animationBool) {
+        for (const Frame& frame : frames) {
             showFrame(frame);
         }
         animationBool = ui->animateButton->isChecked();
     }
 }
 
-void previewwindow::showFrame(Frame frame)
-{
+void previewwindow::showFrame(Frame frame) {
     std::vector<std::vector<QColor>> pixels = frame.getPixels();
+
     // Dimensions of the QLabel display area
     int labelWidth = ui->spriteLabel->width();
     int labelHeight = ui->spriteLabel->height();
 
     // Sets the size to pixel size of the radio button is checked.
     bool actualSize = ui->actualSizeRadio->isChecked();
-    if(actualSize){
+
+    if (actualSize) {
         labelWidth = actualWidth;
         labelHeight = actualHeight;
     }

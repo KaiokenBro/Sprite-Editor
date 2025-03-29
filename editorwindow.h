@@ -20,9 +20,10 @@ public:
     ~EditorWindow();
 
 private:
-    QColor color;
 
+    FrameManager *frameManager;
     Ui::EditorWindow *ui;
+    QColor color;
     QImage sprite;
 
     int zoom = 10;
@@ -32,7 +33,6 @@ private:
     bool isDrawing = false;
     bool isErasing = false;
     bool isGettingColor = false;
-    FrameManager *frameManager;
 
     void updateCanvas();
 
@@ -58,10 +58,12 @@ public slots:
     void getSelectedFrameToCopy();
 
 signals:
+
     void deleteFrame(int frameIndex);
     void updatePixelInFrame(int frameIndex, int rowIndex, int columnIndex, int red, int green, int blue, int alpha);
     void getPixels(int frameIndex);
     void selectedFrameToCopy(int frameIndex);
+
 };
 
 #endif // EDITORWINDOW_H

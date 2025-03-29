@@ -5,21 +5,26 @@
 #include <QObject>
 #include "frame.h"
 
-class FrameManager : public QObject
-{
+class FrameManager : public QObject {
     Q_OBJECT
+
 public:
+
     // The existing frames in the frame manager.
     std::vector<Frame> frames;
+
     // Height of the frame in pixels
     int height;
+
     // Width of each frame in pixels
     int width;
 
 public:
+
     explicit FrameManager(int height, int width, QObject *parent = nullptr);
 
 public slots:
+
     // /*
     //  * This method adds an existing frame to the end of the frame manager.
     //  * @param frameToAdd - The frame to be added to the frame manager.
@@ -59,6 +64,7 @@ public slots:
     void getPixelsForFrame(int frameIndex);
 
 signals:
+
     /*
      * Send stored pixels of a frame to the canvas.
      */

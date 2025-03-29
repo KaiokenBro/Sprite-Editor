@@ -13,13 +13,16 @@
 #include <QObject>
 #include <QWidget>
 
-class SaveLoadManager : public QObject
-{
+class SaveLoadManager : public QObject {
     Q_OBJECT
+
 public:
+
     explicit SaveLoadManager(QObject *parent = nullptr);
 
 signals:
+
+
 };
 
 #endif // SAVELOADMANAGER_H
