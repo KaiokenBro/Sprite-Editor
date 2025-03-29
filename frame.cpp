@@ -1,7 +1,9 @@
 #include "frame.h"
 
+// Constructor
 Frame::Frame() : height(0), width(0) {}
 
+// Constructor
 Frame::Frame(int height, int width) : height(height), width(width) {
 
     for (int i = 0; i < height; i++) {
@@ -21,6 +23,7 @@ Frame::Frame(int height, int width) : height(height), width(width) {
     }
 }
 
+// Updates frame in Frame
 void Frame::updateFrame(int rowIndex, int columnIndex, int red, int green, int blue, int alpha) {
     QColor* pixelToUpdate = &pixels.at(rowIndex).at(columnIndex);
     pixelToUpdate->setRed(red);
@@ -29,6 +32,7 @@ void Frame::updateFrame(int rowIndex, int columnIndex, int red, int green, int b
     pixelToUpdate->setAlpha(alpha);
 }
 
+// Gets pixels for Frame
 std::vector<std::vector<QColor>> Frame::getPixels() {
     return pixels;
 }

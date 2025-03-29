@@ -8,19 +8,13 @@
 using std::min;
 using std::max;
 
-// Pattern
-// connect(WhatIsEmittingTheSignal,
-//        WhichSignalIsIt,
-//        WhatHasASlot,
-//        WhichSlotIsIt);
-
 // Constructor
-EditorWindow::EditorWindow(FrameManager *frameManager, int width, int height, QWidget *parent)
-    : QMainWindow(parent)       // Call base QMainWindow constructor
-    , ui(new Ui::EditorWindow)  // Initialize UI pointer
-    , spriteWidth(width)        // Store user-defined width
-    , spriteHeight(height)      // Store user-defined height
-    , frameManager(frameManager)
+EditorWindow::EditorWindow(FrameManager *frameManager, int width, int height, QWidget *parent) :
+    QMainWindow(parent),       // Call base QMainWindow constructor
+    ui(new Ui::EditorWindow),  // Initialize UI pointer
+    spriteWidth(width),        // Store user-defined width
+    spriteHeight(height),      // Store user-defined height
+    frameManager(frameManager)
 {
 
     // Set up UI components
@@ -47,6 +41,10 @@ EditorWindow::EditorWindow(FrameManager *frameManager, int width, int height, QW
 
     color = QColor::fromRgb(0, 0, 0, 255);
 
+    //////////////////////////////////////////////////
+    ////////   UI -> UI CONNECTIONS        //////////
+    /////////////////////////////////////////////////
+
     // When drawButton clicked, enable drawing
     connect(ui->copyButton,
             &QPushButton::clicked,
@@ -65,77 +63,89 @@ EditorWindow::EditorWindow(FrameManager *frameManager, int width, int height, QW
             this,
             &EditorWindow::enableDrawing);
 
-    //When the red value changes, change the current color's red value
+    // When the red value changes, change the current color's red value
     connect(ui->redSpinBox,
             &QSpinBox::valueChanged,
             this,
             &EditorWindow::redChanged);
 
-    //When the blue value changes, change the current color's blue value
+    // When the blue value changes, change the current color's blue value
     connect(ui->blueSpinBox,
             &QSpinBox::valueChanged,
             this,
             &EditorWindow::blueChanged);
 
-    //When the green value changes, change the current color's green value
+    // When the green value changes, change the current color's green value
     connect(ui->greenSpinBox,
             &QSpinBox::valueChanged,
             this,
             &EditorWindow::greenChanged);
 
-    //When the alpha value changes, change the current color's alpha value
+    // When the alpha value changes, change the current color's alpha value
     connect(ui->alphaSpinBox,
             &QSpinBox::valueChanged,
             this,
             &EditorWindow::alphaChanged);
 
-    // Frame Manager related connects below
+    //////////////////////////////////////////////////
+    ////////   UI -> FRAMEMANAGER CONNECTIONS   //////
+    /////////////////////////////////////////////////
 
+    // When addFrameButton clicked, add new frame to frameManager
     connect(ui->addFrameButton,
             &QPushButton::clicked,
             frameManager,
             &FrameManager::addFrame);
 
+    // When frameAdded to frameManager, addFrameToStack in editorWindow
     connect(frameManager,
             &FrameManager::frameAdded,
             this,
             &EditorWindow::addFrameToStack);
 
+    // When deleteFrameButton clicked, deleteFrameFromStack in editorWindow
     connect(ui->deleteFrameButton,
             &QPushButton::clicked,
             this,
             &EditorWindow::deleteFrameFromStack);
 
+    // When deleteFrame emits, deleteFrame in frameManager
     connect(this,
             &EditorWindow::deleteFrame,
             frameManager,
             &FrameManager::deleteFrame);
 
+    // When updatePixelInFrame emits, updateFrame in frameManager
     connect(this,
             &EditorWindow::updatePixelInFrame,
             frameManager,
             &FrameManager::updateFrame);
 
+    // When itemSelectionChanged in frameStackWidget, getSelectedFrame from editorWindow
     connect(ui->frameStackWidget,
             &QListWidget::itemSelectionChanged,
             this,
             &EditorWindow::getSelectedFrame);
 
+    // When getPixels emits, getPixelsForFrame for frameManager
     connect(this,
             &EditorWindow::getPixels,
             frameManager,
             &FrameManager::getPixelsForFrame);
 
+    // When frameManager foundFrame, switchCanvas in editorWindow
     connect(frameManager,
             &FrameManager::foundFrame,
             this,
             &EditorWindow::switchCanvas);
 
+    // When duplicateFrameButton clicked, getSelectedFrameToCopy from editorWindow
     connect(ui->duplicateFrameButton,
             &QPushButton::clicked,
             this,
             &EditorWindow::getSelectedFrameToCopy);
 
+    // When selectedFrameToCopy emits, copyFrame in frameManager
     connect(this,
             &EditorWindow::selectedFrameToCopy,
             frameManager,
@@ -148,52 +158,52 @@ EditorWindow::~EditorWindow() {
     delete ui;
 }
 
-//Slot
+// Slot - UI
 void EditorWindow::redChanged(int value) {
     color.setRed(value);
     ui->colorPreview->setStyleSheet("QLabel { background-color: " + color.name(QColor::HexArgb) + "; }");
 }
 
-//Slot
+// Slot - UI
 void EditorWindow::blueChanged(int value) {
     color.setBlue(value);
     ui->colorPreview->setStyleSheet("QLabel { background-color: " + color.name(QColor::HexArgb) + "; }");
 }
 
-//Slot
+// Slot - UI
 void EditorWindow::greenChanged(int value) {
     color.setGreen(value);
     ui->colorPreview->setStyleSheet("QLabel { background-color: " + color.name(QColor::HexArgb) + "; }");
 }
 
-//Slot
+// Slot - UI
 void EditorWindow::alphaChanged(int value) {
     color.setAlpha(value);
     ui->colorPreview->setStyleSheet("QLabel { background-color: " + color.name(QColor::HexArgb) + "; }");
 }
 
-// Slot
+// Slot - UI
 void EditorWindow::enableDrawing() {
     isDrawing = true;
     isErasing = false;
     isGettingColor = false;
 }
 
-// Slot
+// Slot - UI
 void EditorWindow::enableEraser() {
     isErasing = true;
     isDrawing = false;
     isGettingColor = false;
 }
 
-//Slot
+// Slot - UI
 void EditorWindow::enableCopyColor() {
     isGettingColor = true;
     isDrawing = false;
     isErasing = false;
 }
 
-// Slot
+// Slot - UI
 void EditorWindow::animateClicked() {
 
     // Create preview window
@@ -203,7 +213,116 @@ void EditorWindow::animateClicked() {
     preview->show();
 }
 
-// Method - Canvas redraw function
+// Slot - UI
+void EditorWindow::addFrameToStack(int frameNumber) {
+    ui->frameStackWidget->addItem("Frame" + QString::number(frameNumber));
+}
+
+// Slot - UI
+void EditorWindow::deleteFrameFromStack() {
+    QListWidgetItem *selectedItem = ui->frameStackWidget->currentItem();
+
+    if (selectedItem) {
+
+        // There should always be at least 1 frame.
+        if (ui->frameStackWidget->count() > 1) {
+
+            int frameIndex = ui->frameStackWidget->row(selectedItem);
+            delete ui->frameStackWidget->takeItem(frameIndex);
+            emit deleteFrame(frameIndex);
+
+            // Update the frame names upon successful deletion.
+            for (int i = 0; i < ui->frameStackWidget->count(); ++i) {
+                QListWidgetItem *item = ui->frameStackWidget->item(i);
+                item->setText("Frame " + QString::number(i + 1));
+            }
+        }
+    }
+}
+
+// Slot - UI
+void EditorWindow::switchCanvas(std::vector<std::vector<QColor>> pixels) {
+
+    // Dimensions of the QLabel display area
+    int labelWidth = ui->spriteLabel->width();
+    int labelHeight = ui->spriteLabel->height();
+
+    // Calculate pixel size so the sprite fits inside the label
+    int pixelWidth = labelWidth / spriteWidth;
+    int pixelHeight = labelHeight / spriteHeight;
+    int pixelSize = max(1, min(pixelWidth, pixelHeight));
+
+    // Calculate the total size of the scaled sprite
+    int totalWidth = pixelSize * spriteWidth;
+    int totalHeight = pixelSize * spriteHeight;
+
+    // Center the drawing on the QLabel
+    int offsetX = (labelWidth - totalWidth) / 2;
+    int offsetY = (labelHeight - totalHeight) / 2;
+
+    // Create the visual canvas image (what the user sees)
+    QPixmap canvas(labelWidth, labelHeight);
+
+    // Set background color to White
+    canvas.fill(Qt::white);
+
+    QPainter painter(&canvas);
+
+    QColor savedColor = color;
+
+    for (int y = 0; y < spriteHeight; ++y) {
+
+        for (int x = 0; x < spriteWidth; ++x) {
+            color = pixels.at(y).at(x);
+            sprite.setPixelColor(x, y, color);
+        }
+    }
+
+    color = savedColor;
+
+    // Draw each pixel from the logical sprite onto the canvas
+    for (int y = 0; y < spriteHeight; ++y) {
+
+        for (int x = 0; x < spriteWidth; ++x) {
+
+            // Get color at (x, y)
+            QColor color = sprite.pixelColor(x, y);
+            QRect rect(offsetX + x * pixelSize, offsetY + y * pixelSize, pixelSize, pixelSize);
+
+            // Fill pixel
+            painter.fillRect(rect, color);
+
+            // Draw grid
+            painter.setPen(Qt::gray);
+            painter.drawRect(rect);
+        }
+    }
+
+    // Update the QLabel with the new canvas image
+    ui->spriteLabel->setPixmap(canvas);
+}
+
+// Slot - UI
+void EditorWindow::getSelectedFrame() {
+    QListWidgetItem *selectedItem = ui->frameStackWidget->currentItem();
+
+    if (selectedItem) {
+        int frameIndex = ui->frameStackWidget->row(selectedItem);
+        emit getPixels(frameIndex);
+    }
+}
+
+// Slot - UI
+void EditorWindow::getSelectedFrameToCopy() {
+    QListWidgetItem *selectedItem = ui->frameStackWidget->currentItem();
+
+    if (selectedItem) {
+        int frameIndex = ui->frameStackWidget->row(selectedItem);
+        emit selectedFrameToCopy(frameIndex);
+    }
+}
+
+// Method - Updates canvas
 void EditorWindow::updateCanvas() {
 
     // Dimensions of the QLabel display area
@@ -254,7 +373,7 @@ void EditorWindow::updateCanvas() {
     ui->spriteLabel->setPixmap(canvas);
 }
 
-// Method
+// Method - Tracks mouse events
 bool EditorWindow::eventFilter(QObject *watched, QEvent *event) {
 
     // Only respond to mouse presses on the spriteLabel
@@ -338,108 +457,4 @@ bool EditorWindow::eventFilter(QObject *watched, QEvent *event) {
 
     // Default behavior
     return QMainWindow::eventFilter(watched, event);
-}
-
-void EditorWindow::addFrameToStack(int frameNumber) {
-    ui->frameStackWidget->addItem("Frame" + QString::number(frameNumber));
-}
-
-void EditorWindow::deleteFrameFromStack() {
-    QListWidgetItem *selectedItem = ui->frameStackWidget->currentItem();
-
-    if (selectedItem) {
-
-        // There should always be at least 1 frame.
-        if (ui->frameStackWidget->count() > 1) {
-
-            int frameIndex = ui->frameStackWidget->row(selectedItem);
-            delete ui->frameStackWidget->takeItem(frameIndex);
-            emit deleteFrame(frameIndex);
-
-            // Update the frame names upon successful deletion.
-            for (int i = 0; i < ui->frameStackWidget->count(); ++i) {
-                QListWidgetItem *item = ui->frameStackWidget->item(i);
-                item->setText("Frame " + QString::number(i + 1));
-            }
-        }
-    }
-}
-
-void EditorWindow::switchCanvas(std::vector<std::vector<QColor>> pixels) {
-
-    // Dimensions of the QLabel display area
-    int labelWidth = ui->spriteLabel->width();
-    int labelHeight = ui->spriteLabel->height();
-
-    // Calculate pixel size so the sprite fits inside the label
-    int pixelWidth = labelWidth / spriteWidth;
-    int pixelHeight = labelHeight / spriteHeight;
-    int pixelSize = max(1, min(pixelWidth, pixelHeight));
-
-    // Calculate the total size of the scaled sprite
-    int totalWidth = pixelSize * spriteWidth;
-    int totalHeight = pixelSize * spriteHeight;
-
-    // Center the drawing on the QLabel
-    int offsetX = (labelWidth - totalWidth) / 2;
-    int offsetY = (labelHeight - totalHeight) / 2;
-
-    // Create the visual canvas image (what the user sees)
-    QPixmap canvas(labelWidth, labelHeight);
-
-    // Set background color to White
-    canvas.fill(Qt::white);
-
-    QPainter painter(&canvas);
-
-    QColor savedColor = color;
-
-    for (int y = 0; y < spriteHeight; ++y) {
-
-        for (int x = 0; x < spriteWidth; ++x) {
-            color = pixels.at(y).at(x);
-            sprite.setPixelColor(x, y, color);
-        }
-    }
-
-    color = savedColor;
-
-    // Draw each pixel from the logical sprite onto the canvas
-    for (int y = 0; y < spriteHeight; ++y) {
-
-        for (int x = 0; x < spriteWidth; ++x) {
-
-            // Get color at (x, y)
-            QColor color = sprite.pixelColor(x, y);
-            QRect rect(offsetX + x * pixelSize, offsetY + y * pixelSize, pixelSize, pixelSize);
-
-            // Fill pixel
-            painter.fillRect(rect, color);
-
-            // Draw grid
-            painter.setPen(Qt::gray);
-            painter.drawRect(rect);
-        }
-    }
-
-    // Update the QLabel with the new canvas image
-    ui->spriteLabel->setPixmap(canvas);
-}
-
-void EditorWindow::getSelectedFrame() {
-    QListWidgetItem *selectedItem = ui->frameStackWidget->currentItem();
-
-    if (selectedItem) {
-        int frameIndex = ui->frameStackWidget->row(selectedItem);
-        emit getPixels(frameIndex);
-    }
-}
-
-void EditorWindow::getSelectedFrameToCopy() {
-    QListWidgetItem *selectedItem = ui->frameStackWidget->currentItem();
-
-    if (selectedItem) {
-        int frameIndex = ui->frameStackWidget->row(selectedItem);
-        emit selectedFrameToCopy(frameIndex);
-    }
 }

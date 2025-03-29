@@ -12,10 +12,10 @@
 //        WhichSlotIsIt);
 
 // Constructor
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
-    , editorWindow(nullptr)
+MainWindow::MainWindow(QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::MainWindow),
+    editorWindow(nullptr)
 {
     ui->setupUi(this);
 
@@ -37,6 +37,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Initially disable the openButton
     ui->openButton->setEnabled(false);
+
+    //////////////////////////////////////////////////
+    ////////   UI -> UI CONNECTIONS        //////////
+    /////////////////////////////////////////////////
 
     // When newButton is clicked, hide welcomeLabel
     connect(ui->newButton,
@@ -135,42 +139,42 @@ MainWindow::~MainWindow() {
     delete ui;
 }
 
-// Slot
+// Slot - UI
 void MainWindow::hideWelcomeLabel() {
     ui->welcomeLabel->setVisible(false);
 }
 
-// Slot
+// Slot - UI
 void MainWindow::displayCreateFileBox() {
     ui->createFileBox->setVisible(true);
 }
 
-// Slot
+// Slot - UI
 void MainWindow::hideCreateFileBox() {
     ui->createFileBox->setVisible(false);
 }
 
-// Slot
+// Slot - UI
 void MainWindow::disableNewButton() {
     ui->newButton->setEnabled(false);
 }
 
-// Slot
+// Slot - UI
 void MainWindow::enableNewButton() {
     ui->newButton->setEnabled(true);
 }
 
-// Slot
+// Slot - UI
 void MainWindow::disableLoadButton() {
     ui->loadButton->setEnabled(false);
 }
 
-// Slot
+// Slot - UI
 void MainWindow::enableLoadButton() {
     ui->loadButton->setEnabled(true);
 }
 
-// Slot
+// Slot - UI
 void MainWindow::validateInputs() {
 
     // Check if both fields have non-empty values
@@ -181,7 +185,41 @@ void MainWindow::validateInputs() {
     ui->setSizeButton->setEnabled(validWidth && validHeight);
 }
 
-// Slot
+// Slot - Syncs Width and Height value box
+void MainWindow::syncHeightToWidth(const QString &text) {
+    if (ui->heightLineEdit->text() != text) {
+        ui->heightLineEdit->setText(text);
+    }
+}
+
+// Slot - Syncs Width and Height value box
+void MainWindow::syncWidthToHeight(const QString &text) {
+    if (ui->widthLineEdit->text() != text) {
+        ui->widthLineEdit->setText(text);
+    }
+}
+
+// Slot - Opens file manager for selecting files to load
+void MainWindow::loadFile() {
+
+    QString fileName
+        = QFileDialog::getOpenFileName(this,
+                                       "Open Sprite File",
+                                       QDir::homePath(),
+                                       "Image Files (*.png *.bmp *.jpg *.jpeg);;All Files (*.*)");
+
+    if (!fileName.isEmpty()) {
+
+        // Update the filePathLabel from the designer
+        ui->filePathLabel->setText(fileName);
+
+        // Enable the openButton
+        ui->openButton->setEnabled(true);
+    }
+
+}
+
+// Slot - Validates size of sprite
 void MainWindow::onSetSizeButtonClicked() {
     int width = ui->widthLineEdit->text().toInt();
     int height = ui->heightLineEdit->text().toInt();
@@ -223,38 +261,4 @@ void MainWindow::openEditorWindow() {
 
     // Close the main window
     this->close();
-}
-
-// Slot - Opens file manager for selecting files to load
-void MainWindow::loadFile() {
-
-    QString fileName
-        = QFileDialog::getOpenFileName(this,
-                                       "Open Sprite File",
-                                       QDir::homePath(),
-                                       "Image Files (*.png *.bmp *.jpg *.jpeg);;All Files (*.*)");
-
-    if (!fileName.isEmpty()) {
-
-        // Update the filePathLabel from the designer
-        ui->filePathLabel->setText(fileName);
-
-        // Enable the openButton
-        ui->openButton->setEnabled(true);
-    }
-
-}
-
-// Slot
-void MainWindow::syncHeightToWidth(const QString &text) {
-    if (ui->heightLineEdit->text() != text) {
-        ui->heightLineEdit->setText(text);
-    }
-}
-
-// Slot
-void MainWindow::syncWidthToHeight(const QString &text) {
-    if (ui->widthLineEdit->text() != text) {
-        ui->widthLineEdit->setText(text);
-    }
 }
