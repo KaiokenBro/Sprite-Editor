@@ -4,6 +4,8 @@
 
 #include <QMouseEvent>
 #include <QPainter>
+#include <QFileDialog>
+#include <QMessageBox>
 
 using std::min;
 using std::max;
@@ -19,6 +21,9 @@ EditorWindow::EditorWindow(FrameManager *frameManager, int width, int height, QW
 
     // Set up UI components
     ui->setupUi(this);
+
+    // Create your SaveLoadManager instance
+    saveLoadManager = new SaveLoadManager();
 
     // Create the logical pixel grid (sprite image) using ARGB (supports transparency)
     sprite = QImage(spriteWidth, spriteHeight, QImage::Format_ARGB32);
@@ -151,11 +156,57 @@ EditorWindow::EditorWindow(FrameManager *frameManager, int width, int height, QW
             frameManager,
             &FrameManager::copyFrame);
 
+    //////////////////////////////////////////////////
+    /////   UI -> SAVELOADMANAGER CONNECTIONS   /////
+    /////////////////////////////////////////////////
+
+    // When saveButton clicked,
+    connect(ui->saveButton,
+            &QPushButton::clicked,
+            this,
+            &EditorWindow::onSaveButtonClicked);
+
 }
 
 // Destructor
 EditorWindow::~EditorWindow() {
     delete ui;
+}
+
+// Slot - Triggered when the Save button is clicked in the EditorWindow
+void EditorWindow::onSaveButtonClicked() {
+
+    // Open a file save dialog and let the user pick a path to save the JSON file.
+    // The dialog title is "Save Sprite File", and it filters for .json files.
+    QString filePath = QFileDialog::getSaveFileName(
+        this,                       // Parent widget (EditorWindow)
+        "Save Sprite File",         // Title of the dialog
+        "",                         // Default directory (empty = current)
+        "JSON Files (*.json)"       // File filter
+        );
+
+    // Check if the user selected a file (didn't cancel the dialog)
+    if (!filePath.isEmpty()) {
+        bool success = saveLoadManager->saveToFile(*frameManager, filePath);
+
+        // If the save was successful, show a success message
+        if (success) {
+            QMessageBox::information(
+                this,                       // Parent widget
+                "Success",                  // Dialog title
+                "File saved successfully!"  // Message
+            );
+        }
+
+        // If the save failed, show an error message
+        else {
+            QMessageBox::warning(
+                this,                       // Parent widget
+                "Error",                    // Dialog title
+                "Failed to save the file."  // Message
+            );
+        }
+    }
 }
 
 // Slot - UI

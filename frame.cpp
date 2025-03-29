@@ -36,3 +36,11 @@ void Frame::updateFrame(int rowIndex, int columnIndex, int red, int green, int b
 std::vector<std::vector<QColor>> Frame::getPixels() {
     return pixels;
 }
+
+int Frame::getHeight() {
+    return height;
+}
+
+int Frame::getWidth() {
+    return width;
+}

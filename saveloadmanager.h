@@ -10,6 +10,8 @@
  * @date 03/23/2025
  */
 
+#include "framemanager.h"
+
 #include <QObject>
 #include <QWidget>
 
@@ -19,6 +21,13 @@ class SaveLoadManager : public QObject {
 public:
 
     explicit SaveLoadManager(QObject *parent = nullptr);
+
+    bool saveToFile(FrameManager& manager, QString filePath);
+    bool loadFromFile(FrameManager& manager, QString filePath);
+
+private:
+
+
 
 signals:
 

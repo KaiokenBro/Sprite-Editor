@@ -37,6 +37,8 @@ public slots:
      */
     void addFrame();
 
+    void addFrameJson(Frame frame);
+
     /*
      * This method deletes the current frame selected from the frame manager.
      * @param frameIndex - The index of the frame to update.

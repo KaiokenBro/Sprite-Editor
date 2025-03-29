@@ -8,10 +8,10 @@ FrameManager::FrameManager(int height, int width, QObject *parent) :
 {}
 
 // New function needed to add loaded frames from json
-// void FrameManager::addFrame(Frame frameToAdd){
-//     frames.push_back(frameToAdd);
-//     emit frameAdded(frames.size());
-// }
+void FrameManager::addFrameJson(Frame frameToAdd){
+    frames.push_back(frameToAdd);
+    emit frameAdded(frames.size());
+}
 
 // Adds frame to frameManager
 void FrameManager::addFrame() {

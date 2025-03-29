@@ -49,6 +49,9 @@ public:
      */
     std::vector<std::vector<QColor>> getPixels();
 
+    int getHeight();
+    int getWidth();
+
 };
 
 #endif // FRAME_H

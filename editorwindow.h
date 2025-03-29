@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "framemanager.h"
+#include "saveloadmanager.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class EditorWindow; }
@@ -22,6 +23,8 @@ public:
 private:
 
     FrameManager *frameManager;
+    SaveLoadManager* saveLoadManager;
+
     Ui::EditorWindow *ui;
     QColor color;
     QImage sprite;
@@ -56,6 +59,8 @@ public slots:
     void switchCanvas(std::vector<std::vector<QColor>> pixels);
     void getSelectedFrame();
     void getSelectedFrameToCopy();
+
+    void onSaveButtonClicked();
 
 signals:
 
