@@ -2,9 +2,9 @@
 
 // Constructor
 FrameManager::FrameManager(int height, int width, QObject *parent) :
+    QObject(parent),
     height(height),
-    width(width),
-    QObject(parent)
+    width(width)
 {}
 
 // New function needed to add loaded frames from json
