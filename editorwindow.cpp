@@ -29,8 +29,8 @@ EditorWindow::EditorWindow(FrameManager *frameManager, int width, int height, QW
     // Create the logical pixel grid (sprite image) using ARGB (supports transparency)
     sprite = QImage(spriteWidth, spriteHeight, QImage::Format_ARGB32);
 
-    // Fill the image with a white background
-    sprite.fill(Qt::white);
+    // Fill the image with a transparent background
+    sprite.fill(QColor(255, 255, 255, 0));
 
     // Fix the QLabel size so it's always 500x500, regardless of sprite resolution
     ui->spriteLabel->setFixedSize(500, 500);
@@ -50,6 +50,12 @@ EditorWindow::EditorWindow(FrameManager *frameManager, int width, int height, QW
     //////////////////////////////////////////////////
     ////////   UI -> UI CONNECTIONS        //////////
     /////////////////////////////////////////////////
+
+    //When invertButton clicked, invert pixel colors
+    connect(ui->invertButton,
+            &QPushButton::clicked,
+            this,
+            &EditorWindow::invertColor);
 
     // When drawButton clicked, enable drawing
     connect(ui->copyButton,
@@ -214,6 +220,12 @@ void EditorWindow::onSaveButtonClicked() {
             );
         }
     }
+}
+
+// Slot - UI
+void EditorWindow::invertColor() {
+    sprite.invertPixels();
+    updateCanvas();
 }
 
 // Slot - UI
@@ -475,8 +487,33 @@ bool EditorWindow::eventFilter(QObject *watched, QEvent *event) {
                     int frameIndex = 0;
                     emit updatePixelInFrame(frameIndex, y, x, color.red(), color.green(), color.blue(), color.alpha());
                 }
-            }
+            }      
+            else if (isErasing) {
 
+                sprite.setPixelColor(x, y, QColor(255, 255, 255, 0)); // Replace with transparent color later
+
+                // Update frame in frame manager.
+                QListWidgetItem *selectedItem = ui->frameStackWidget->currentItem();
+
+                if (selectedItem) {
+                    int frameIndex = ui->frameStackWidget->row(selectedItem);
+                    emit updatePixelInFrame(frameIndex, y, x, color.red(), color.green(), color.blue(), color.alpha());
+                }
+
+                else {
+                    int frameIndex = 0;
+                    emit updatePixelInFrame(frameIndex, y, x, color.red(), color.green(), color.blue(), color.alpha());
+                }
+            }
+            else if (isGettingColor) {
+                color = sprite.pixelColor(x, y); // Set color to the selected pixel color
+
+                // Update spin boxes and sliders for every color channel
+                ui->redSpinBox->setValue(color.red());
+                ui->greenSpinBox->setValue(color.green());
+                ui->blueSpinBox->setValue(color.blue());
+                ui->alphaSpinBox->setValue(color.alpha());
+            }
 
             updateCanvas();
         }
