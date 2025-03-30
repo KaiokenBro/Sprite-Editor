@@ -7,6 +7,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QString>
+#include <iostream>
 
 using std::min;
 using std::max;
@@ -40,10 +41,6 @@ EditorWindow::EditorWindow(FrameManager *frameManager, int width, int height, QW
 
     // Set up the label to handle mouse clicks
     ui->spriteLabel->installEventFilter(this);
-
-    // Add a frame that corresponds to the canvas to start with
-    frameManager->addFrame();
-    addFrameToStack(1);
 
     color = QColor::fromRgb(0, 0, 0, 255);
 
@@ -127,6 +124,12 @@ EditorWindow::EditorWindow(FrameManager *frameManager, int width, int height, QW
     ////////   UI -> FRAMEMANAGER CONNECTIONS   //////
     /////////////////////////////////////////////////
 
+    // When EditorWindow starts, add one frame to match the canvas
+    connect(this,
+            &EditorWindow::addOneFrame,
+            frameManager,
+            &FrameManager::addFrame);
+
     // When addFrameButton clicked, add new frame to frameManager
     connect(ui->addFrameButton,
             &QPushButton::clicked,
@@ -196,6 +199,9 @@ EditorWindow::EditorWindow(FrameManager *frameManager, int width, int height, QW
             &QPushButton::clicked,
             this,
             &EditorWindow::onSaveButtonClicked);
+
+    // Add a frame that corresponds to the canvas to start with
+    startFrameManager();
 
 }
 
@@ -414,6 +420,11 @@ void EditorWindow::getSelectedFrameToCopy() {
         int frameIndex = ui->frameStackWidget->row(selectedItem);
         emit selectedFrameToCopy(frameIndex);
     }
+}
+
+// Slot - Add one frame to model and update UI
+void EditorWindow::startFrameManager() {
+    emit addOneFrame();
 }
 
 // Method - Updates canvas

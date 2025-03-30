@@ -38,6 +38,7 @@ private:
     bool isGettingColor = false;
 
     void updateCanvas();
+    void startFrameManager();
 
 protected:
 
@@ -64,6 +65,7 @@ public slots:
     void onSaveButtonClicked();
 
 signals:
+    void addOneFrame();
     void changeRedValue(int value);
     void changeGreenValue(int value);
     void changeBlueValue(int value);
