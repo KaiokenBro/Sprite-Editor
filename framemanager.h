@@ -67,6 +67,12 @@ public slots:
 
     std::vector<Frame> sendFrames();
 
+    /*
+     * Rotates a frame given a frame index. The frame is expected to be a square (equal height and width).
+     * @param frameIndex - The frame to rotate.
+     */
+    void rotate90Clockwise(int frameIndex);
+
 signals:
 
     /*

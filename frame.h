@@ -49,6 +49,12 @@ public:
      */
     std::vector<std::vector<QColor>> getPixels();
 
+    /*
+     * Perform a 90 degrees clockwise rotation on all pixels. This is done by first transposing the pixels
+     * and then reversing the order of pixels in each row. The frame must be a square (equal height and width).
+     */
+    void rotateFrame();
+
     int getHeight();
     int getWidth();
 

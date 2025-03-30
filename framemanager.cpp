@@ -46,3 +46,9 @@ void FrameManager::getPixelsForFrame(int frameIndex) {
 std::vector<Frame> FrameManager::sendFrames(){
     return frames;
 }
+
+void FrameManager::rotate90Clockwise(int frameIndex) {
+    Frame *frameToRotate = &frames.at(frameIndex);
+    frameToRotate->rotateFrame();
+    emit foundFrame(frameToRotate->getPixels());
+}

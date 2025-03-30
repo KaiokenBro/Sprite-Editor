@@ -190,6 +190,18 @@ EditorWindow::EditorWindow(FrameManager *frameManager, int width, int height, QW
             frameManager,
             &FrameManager::copyFrame);
 
+    // When rotateButton is clicked, get the frame to rotate
+    connect(ui->rotateButton,
+            &QPushButton::clicked,
+            this,
+            &EditorWindow::getSelectedFrameToRotate);
+
+    // Pass the frame to model to rotate it
+    connect(this,
+            &EditorWindow::selectedFrameToRotate,
+            frameManager,
+            &FrameManager::rotate90Clockwise);
+
     //////////////////////////////////////////////////
     /////   UI -> SAVELOADMANAGER CONNECTIONS   /////
     /////////////////////////////////////////////////
@@ -202,7 +214,6 @@ EditorWindow::EditorWindow(FrameManager *frameManager, int width, int height, QW
 
     // Add a frame that corresponds to the canvas to start with
     startFrameManager();
-
 }
 
 // Destructor
@@ -420,6 +431,19 @@ void EditorWindow::getSelectedFrameToCopy() {
         int frameIndex = ui->frameStackWidget->row(selectedItem);
         emit selectedFrameToCopy(frameIndex);
     }
+}
+
+// Slot - UI
+void EditorWindow::getSelectedFrameToRotate() {
+    QListWidgetItem *selectedItem = ui->frameStackWidget->currentItem();
+    int frameIndex;
+    if (selectedItem) {
+        frameIndex = ui->frameStackWidget->row(selectedItem);
+    }
+    else {
+        frameIndex = 0;
+    }
+    emit selectedFrameToRotate(frameIndex);
 }
 
 // Slot - Add one frame to model and update UI

@@ -60,6 +60,7 @@ public slots:
     void switchCanvas(std::vector<std::vector<QColor>> pixels);
     void getSelectedFrame();
     void getSelectedFrameToCopy();
+    void getSelectedFrameToRotate();
     void invertColor();
 
     void onSaveButtonClicked();
@@ -75,6 +76,7 @@ signals:
     void updatePixelInFrame(int frameIndex, int rowIndex, int columnIndex, int red, int green, int blue, int alpha);
     void getPixels(int frameIndex);
     void selectedFrameToCopy(int frameIndex);
+    void selectedFrameToRotate(int frameIndex);
 
 };
 

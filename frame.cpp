@@ -44,3 +44,24 @@ int Frame::getHeight() {
 int Frame::getWidth() {
     return width;
 }
+
+void Frame::rotateFrame() {
+
+    // Transpose.
+    for (int i = 0; i < height; i++) {
+        for (int j = i + 1; j < width; j++) {
+            std::swap(pixels.at(i).at(j), pixels.at(j).at(i));
+        }
+    }
+
+    // Reverse each pixel in a row.
+    for (int i = 0; i < height; i++) {
+        int leftIndex = 0;
+        int rightIndex = width - 1;
+        while (leftIndex < rightIndex) {
+            std::swap(pixels.at(i).at(leftIndex), pixels.at(i).at(rightIndex));
+            leftIndex++;
+            rightIndex--;
+        }
+    }
+}
