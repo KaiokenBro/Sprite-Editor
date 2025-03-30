@@ -1,3 +1,5 @@
+//
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
@@ -14,7 +16,7 @@ class MainWindow : public QMainWindow {
 
 public:
 
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(SaveLoadManager* saveLoadManager, FrameManager* frameManager, EditorWindow* editorWindow, QWidget *parent = nullptr);
     ~MainWindow();
 
 private:
@@ -22,7 +24,13 @@ private:
     Ui::MainWindow *ui;
 
     // Pointer to EditorWindow
-    EditorWindow *editorWindow;
+    EditorWindow* editorWindow;
+
+    // Pointer to FrameManager
+    FrameManager* frameManager;
+
+    // Pointer to SaveLoadManager
+    //SaveLoadManager* saveLoadManager;
 
 public slots:
 
@@ -39,6 +47,11 @@ public slots:
     void loadFile();
     void syncHeightToWidth(const QString &text);
     void syncWidthToHeight(const QString &text);
+
+signals:
+
+    void startNewSprite(int width, int height);
+    void openLoadedSprite();
 
 };
 

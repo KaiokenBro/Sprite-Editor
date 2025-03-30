@@ -1,3 +1,5 @@
+//
+
 #include "editorwindow.h"
 #include "ui_editorwindow.h"
 #include "previewwindow.h"
@@ -12,10 +14,9 @@ using std::min;
 using std::max;
 
 // Constructor
-EditorWindow::EditorWindow(FrameManager *frameManager, int width, int height, QWidget *parent) :
+EditorWindow::EditorWindow(SaveLoadManager* saveLoadManager, FrameManager* frameManager, int width, int height, QWidget *parent) :
     QMainWindow(parent),            // Call base QMainWindow constructor
     ui(new Ui::EditorWindow),       // Initialize UI pointer
-    frameManager(frameManager),
     spriteWidth(width),             // Store user-defined width
     spriteHeight(height)            // Store user-defined height
 {
@@ -23,8 +24,8 @@ EditorWindow::EditorWindow(FrameManager *frameManager, int width, int height, QW
     // Set up UI components
     ui->setupUi(this);
 
-    // Create your SaveLoadManager instance
-    saveLoadManager = new SaveLoadManager();
+    this->saveLoadManager = saveLoadManager;
+    this->frameManager = frameManager;
 
     // Create the logical pixel grid (sprite image) using ARGB (supports transparency)
     sprite = QImage(spriteWidth, spriteHeight, QImage::Format_ARGB32);
@@ -47,7 +48,7 @@ EditorWindow::EditorWindow(FrameManager *frameManager, int width, int height, QW
     ////////   UI -> UI CONNECTIONS        //////////
     /////////////////////////////////////////////////
 
-    //When invertButton clicked, invert pixel colors
+    // When invertButton clicked, invert pixel colors
     connect(ui->invertButton,
             &QPushButton::clicked,
             this,
@@ -211,55 +212,11 @@ EditorWindow::EditorWindow(FrameManager *frameManager, int width, int height, QW
             this,
             &EditorWindow::onSaveButtonClicked);
 
-    // Add a frame that corresponds to the canvas to start with
-    startFrameManager();
 }
 
 // Destructor
 EditorWindow::~EditorWindow() {
     delete ui;
-}
-
-// Slot - Triggered when the Save button is clicked in the EditorWindow
-void EditorWindow::onSaveButtonClicked() {
-
-    // Open a file save dialog and let the user pick a path to save the JSON file.
-    // The dialog title is "Save Sprite File", and it filters for .json files.
-    QString filePath = QFileDialog::getSaveFileName(
-        this,                           // Parent widget (EditorWindow)
-        "Save Sprite File",             // Title of the dialog
-        "",                             // Default directory (empty = current)
-        "Sprite Save Files (*.ssp)"     // File filter
-        );
-
-    // Check if the user selected a file (didn't cancel the dialog)
-    if (!filePath.isEmpty()) {
-
-        // Ensure the file has a .ssp extension
-        if (!filePath.endsWith(".ssp", Qt::CaseInsensitive)) {
-            filePath += ".ssp";
-        }
-
-        bool success = saveLoadManager->saveToFile(*frameManager, filePath);
-
-        // If the save was successful, show a success message
-        if (success) {
-            QMessageBox::information(
-                this,                       // Parent widget
-                "Success",                  // Dialog title
-                "File saved successfully!"  // Message
-            );
-        }
-
-        // If the save failed, show an error message
-        else {
-            QMessageBox::warning(
-                this,                       // Parent widget
-                "Error",                    // Dialog title
-                "Failed to save the file."  // Message
-            );
-        }
-    }
 }
 
 // Slot - UI
@@ -445,9 +402,38 @@ void EditorWindow::getSelectedFrameToRotate() {
     emit selectedFrameToRotate(frameIndex);
 }
 
-// Slot - Add one frame to model and update UI
-void EditorWindow::startFrameManager() {
-    emit addOneFrame();
+
+
+
+
+// Method - Setter
+void EditorWindow::setSpriteWidth(int width) {
+    spriteWidth = width;
+}
+
+// Method - Setter
+void EditorWindow::setSpriteHeight(int height) {
+    spriteHeight = height;
+}
+
+// Method - Used to reinitialize editorwindow size
+// Called in mainwindow before opening the editorwindow
+void EditorWindow::reinitializeEditor(int newWidth, int newHeight) {
+    spriteWidth = newWidth;
+    spriteHeight = newHeight;
+
+    // Resize sprite image
+    sprite = QImage(spriteWidth, spriteHeight, QImage::Format_ARGB32);
+    sprite.fill(QColor(255, 255, 255, 0));
+
+    // Clear frames and start fresh
+    frameManager->frames.clear();
+    frameManager->height = newHeight;
+    frameManager->width = newWidth;
+
+    emit addOneFrame(); // Adds one fresh frame to match new size
+
+    updateCanvas(); // Redraw canvas
 }
 
 // Method - Redraws the canvas (spriteLabel) to reflect the current state of the sprite image.
@@ -644,4 +630,58 @@ int EditorWindow::getCurrentFrameIndex() {
     // If an item is selected, return its index (row number) in the list.
     // If no item is selected (e.g., at startup), default to frame index 0.
     return selectedItem ? ui->frameStackWidget->row(selectedItem) : 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Slot - Triggered when the Save button is clicked in the EditorWindow
+void EditorWindow::onSaveButtonClicked() {
+
+    // Open a file save dialog and let the user pick a path to save the JSON file.
+    // The dialog title is "Save Sprite File", and it filters for .json files.
+    QString filePath = QFileDialog::getSaveFileName(
+        this,                           // Parent widget (EditorWindow)
+        "Save Sprite File",             // Title of the dialog
+        "",                             // Default directory (empty = current)
+        "Sprite Save Files (*.ssp)"     // File filter
+        );
+
+    // Check if the user selected a file (didn't cancel the dialog)
+    if (!filePath.isEmpty()) {
+
+        // Ensure the file has a .ssp extension
+        if (!filePath.endsWith(".ssp", Qt::CaseInsensitive)) {
+            filePath += ".ssp";
+        }
+
+        bool success = saveLoadManager->saveToFile(*frameManager, filePath);
+
+        // If the save was successful, show a success message
+        if (success) {
+            QMessageBox::information(
+                this,                       // Parent widget
+                "Success",                  // Dialog title
+                "File saved successfully!"  // Message
+                );
+        }
+
+        // If the save failed, show an error message
+        else {
+            QMessageBox::warning(
+                this,                       // Parent widget
+                "Error",                    // Dialog title
+                "Failed to save the file."  // Message
+                );
+        }
+    }
 }

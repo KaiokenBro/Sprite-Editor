@@ -1,3 +1,5 @@
+//
+
 #include "mainwindow.h"
 #include "editorwindow.h"
 #include "ui_mainwindow.h"
@@ -8,12 +10,15 @@
 #include <QString>
 
 // Constructor
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(SaveLoadManager* saveLoadManager, FrameManager* frameManager, EditorWindow* editorWindow, QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    editorWindow(nullptr)
+    ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    this->editorWindow = editorWindow;
+    this->frameManager = frameManager;
+    //this->saveLoadManager = saveLoadManager;
 
     // Create a validator to restrict input to integers between 1 and 64
     QIntValidator *validator = new QIntValidator(1, 64, this);
@@ -128,6 +133,10 @@ MainWindow::MainWindow(QWidget *parent) :
             this,
             &MainWindow::syncWidthToHeight);
 
+    //////////////////////////////////////////////////
+    ////////  UI -> SAVELOADMANAGER CONNECTIONS //////
+    /////////////////////////////////////////////////
+
 }
 
 // Destructor
@@ -195,35 +204,6 @@ void MainWindow::syncWidthToHeight(const QString &text) {
     }
 }
 
-// Slot - Opens file manager for selecting .ssp files to load
-void MainWindow::loadFile() {
-
-    // Open a file dialog to select only .ssp files
-    QString fileName = QFileDialog::getOpenFileName(
-        this,                               // Parent widget
-        "Open Sprite File",                 // Dialog title
-        QDir::homePath(),                   // Default directory
-        "Sprite Save Files (*.ssp)"         // File filter
-    );
-
-    // If the user selects a file
-    if (!fileName.isEmpty()) {
-
-        // Ensure the file has the .ssp extension
-        if (!fileName.endsWith(".ssp", Qt::CaseInsensitive)) {
-            QMessageBox::warning(this, "Invalid File", "Please select a valid .ssp file.");
-            return;  // Reject invalid files
-        }
-
-        // Update the file path label
-        ui->filePathLabel->setText(fileName);
-
-        // Enable the "Open" button now that a valid file is selected
-        ui->openButton->setEnabled(true);
-    }
-
-}
-
 // Slot - Validates size of sprite
 void MainWindow::onSetSizeButtonClicked() {
     int width = ui->widthLineEdit->text().toInt();
@@ -253,17 +233,51 @@ void MainWindow::openEditorWindow() {
     int width = ui->widthLineEdit->text().toInt();
     int height = ui->heightLineEdit->text().toInt();
 
-    if (!editorWindow) {
-
-        // Create the editor window
-        FrameManager *frameManager = new FrameManager(height, width, this);
-        editorWindow = new EditorWindow(frameManager, width, height, nullptr);
-        frameManager->setParent(editorWindow);
-    }
+    editorWindow->reinitializeEditor(width, height);
 
     // Show the editor window
     editorWindow->show();
 
     // Close the main window
     this->close();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+// Slot - Opens file manager for selecting .ssp files to load
+void MainWindow::loadFile() {
+
+    // Open a file dialog to select only .ssp files
+    QString fileName = QFileDialog::getOpenFileName(
+        this,                               // Parent widget
+        "Open Sprite File",                 // Dialog title
+        QDir::homePath(),                   // Default directory
+        "Sprite Save Files (*.ssp)"         // File filter
+        );
+
+    // If the user selects a file
+    if (!fileName.isEmpty()) {
+
+        // Ensure the file has the .ssp extension
+        if (!fileName.endsWith(".ssp", Qt::CaseInsensitive)) {
+            QMessageBox::warning(this, "Invalid File", "Please select a valid .ssp file.");
+            return;  // Reject invalid files
+        }
+
+        // Update the file path label
+        ui->filePathLabel->setText(fileName);
+
+        // Enable the "Open" button now that a valid file is selected
+        ui->openButton->setEnabled(true);
+    }
+
 }

@@ -25,6 +25,8 @@
  * @date 03/23/2025
  */
 
+//
+
 #include "mainwindow.h"
 
 #include <QApplication>
@@ -32,9 +34,21 @@
 int main(int argc, char *argv[]) {
 
     QApplication a(argc, argv);
-    MainWindow w;
     QApplication::setStyle("Fusion");
-    w.show();
-    return a.exec();
 
+    SaveLoadManager saveLoadManager;
+
+    // Placeholder dimensions; will be updated later based on user input
+    int initialWidth = 1;
+    int initialHeight = 1;
+    FrameManager frameManager(initialHeight, initialWidth);
+
+    // Pass SaveLoadManager and FrameManager to EditorWindow for editing and saving
+    EditorWindow editorWindow(&saveLoadManager, &frameManager, initialWidth, initialHeight);
+
+    MainWindow mainWindow(&saveLoadManager, &frameManager, &editorWindow);
+
+    editorWindow.hide();
+    mainWindow.show();
+    return a.exec();
 }

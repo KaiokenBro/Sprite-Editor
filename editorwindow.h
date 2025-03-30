@@ -1,3 +1,5 @@
+//
+
 #ifndef EDITORWINDOW_H
 #define EDITORWINDOW_H
 
@@ -15,15 +17,25 @@ class EditorWindow : public QMainWindow {
 public:
 
     // Constructor
-    explicit EditorWindow(FrameManager *frameManager, int width, int height, QWidget *parent = nullptr);
+    explicit EditorWindow(SaveLoadManager* saveLoadManager, FrameManager* frameManager, int width, int height, QWidget *parent = nullptr);
 
     // Destructor
     ~EditorWindow();
 
+    // Setter
+    void setSpriteWidth(int width);
+
+    // Setter
+    void setSpriteHeight(int height);
+
+    void reinitializeEditor(int newWidth, int newHeight);
+
 private:
 
     Ui::EditorWindow *ui;
+
     FrameManager *frameManager;
+
     SaveLoadManager* saveLoadManager;
 
     QColor color;
@@ -39,7 +51,6 @@ private:
     bool mousePressed = false;
 
     void updateCanvas();
-    void startFrameManager();
 
     void handleDrawingAction(int x, int y);
     int getCurrentFrameIndex();
