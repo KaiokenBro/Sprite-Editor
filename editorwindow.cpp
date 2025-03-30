@@ -99,6 +99,30 @@ EditorWindow::EditorWindow(FrameManager *frameManager, int width, int height, QW
             this,
             &EditorWindow::alphaChanged);
 
+    // Emits a signal that changes the value of the redSpinBox
+    connect(this,
+            &EditorWindow::changeRedValue,
+            ui->redSpinBox,
+            &QSpinBox::setValue);
+
+    // Emits a signal that changes the value of the greenSpinBox
+    connect(this,
+            &EditorWindow::changeGreenValue,
+            ui->greenSpinBox,
+            &QSpinBox::setValue);
+
+    // Emits a signal that changes the value of the blueSpinBox
+    connect(this,
+            &EditorWindow::changeBlueValue,
+            ui->blueSpinBox,
+            &QSpinBox::setValue);
+
+    // Emits a signal that changes the value of the alphaSpinBox
+    connect(this,
+            &EditorWindow::changeAlphaValue,
+            ui->alphaSpinBox,
+            &QSpinBox::setValue);
+
     //////////////////////////////////////////////////
     ////////   UI -> FRAMEMANAGER CONNECTIONS   //////
     /////////////////////////////////////////////////
@@ -507,12 +531,11 @@ bool EditorWindow::eventFilter(QObject *watched, QEvent *event) {
             }
             else if (isGettingColor) {
                 color = sprite.pixelColor(x, y); // Set color to the selected pixel color
-
                 // Update spin boxes and sliders for every color channel
-                ui->redSpinBox->setValue(color.red());
-                ui->greenSpinBox->setValue(color.green());
-                ui->blueSpinBox->setValue(color.blue());
-                ui->alphaSpinBox->setValue(color.alpha());
+                emit changeRedValue(color.red());
+                emit changeGreenValue(color.green());
+                emit changeBlueValue(color.blue());
+                emit changeAlphaValue(color.alpha());
             }
 
             updateCanvas();

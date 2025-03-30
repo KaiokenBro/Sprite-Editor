@@ -64,6 +64,10 @@ public slots:
     void onSaveButtonClicked();
 
 signals:
+    void changeRedValue(int value);
+    void changeGreenValue(int value);
+    void changeBlueValue(int value);
+    void changeAlphaValue(int value);
 
     void deleteFrame(int frameIndex);
     void updatePixelInFrame(int frameIndex, int rowIndex, int columnIndex, int red, int green, int blue, int alpha);
