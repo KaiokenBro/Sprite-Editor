@@ -521,12 +521,12 @@ bool EditorWindow::eventFilter(QObject *watched, QEvent *event) {
 
                 if (selectedItem) {
                     int frameIndex = ui->frameStackWidget->row(selectedItem);
-                    emit updatePixelInFrame(frameIndex, y, x, color.red(), color.green(), color.blue(), color.alpha());
+                    emit updatePixelInFrame(frameIndex, y, x, 255, 255, 255, 0);
                 }
 
                 else {
                     int frameIndex = 0;
-                    emit updatePixelInFrame(frameIndex, y, x, color.red(), color.green(), color.blue(), color.alpha());
+                    emit updatePixelInFrame(frameIndex, y, x, 255, 255, 255, 0);
                 }
             }
             else if (isGettingColor) {
