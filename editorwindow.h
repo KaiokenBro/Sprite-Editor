@@ -36,9 +36,13 @@ private:
     bool isDrawing = false;
     bool isErasing = false;
     bool isGettingColor = false;
+    bool mousePressed = false;
 
     void updateCanvas();
     void startFrameManager();
+
+    void handleDrawingAction(int x, int y);
+    int getCurrentFrameIndex();
 
 protected:
 

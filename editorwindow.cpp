@@ -7,18 +7,17 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QString>
-#include <iostream>
 
 using std::min;
 using std::max;
 
 // Constructor
 EditorWindow::EditorWindow(FrameManager *frameManager, int width, int height, QWidget *parent) :
-    QMainWindow(parent),       // Call base QMainWindow constructor
-    ui(new Ui::EditorWindow),  // Initialize UI pointer
+    QMainWindow(parent),            // Call base QMainWindow constructor
+    ui(new Ui::EditorWindow),       // Initialize UI pointer
     frameManager(frameManager),
     spriteWidth(width),             // Store user-defined width
-    spriteHeight(height)          // Store user-defined height
+    spriteHeight(height)            // Store user-defined height
 {
 
     // Set up UI components
@@ -451,7 +450,8 @@ void EditorWindow::startFrameManager() {
     emit addOneFrame();
 }
 
-// Method - Updates canvas
+// Method - Redraws the canvas (spriteLabel) to reflect the current state of the sprite image.
+// This ensures that any changes to pixel colors are visually updated on the screen.
 void EditorWindow::updateCanvas() {
 
     // Dimensions of the QLabel display area
@@ -502,84 +502,146 @@ void EditorWindow::updateCanvas() {
     ui->spriteLabel->setPixmap(canvas);
 }
 
-// Method - Tracks mouse events
+// Method - Filters events on the spriteLabel to handle mouse-based drawing, erasing, and color picking.
+// Supports both click and drag interactions for intuitive user control.
 bool EditorWindow::eventFilter(QObject *watched, QEvent *event) {
 
-    // Only respond to mouse presses on the spriteLabel
-    if (watched == ui->spriteLabel && event->type() == QEvent::MouseButtonPress) {
+    // Only handle events for the spriteLabel (the drawing area)// Only handle events for the spriteLabel (the drawing area)
+    if (watched == ui->spriteLabel) {
 
-        // Convert event
-        QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
-
+        // Get dimensions of the QLabel (visual canvas area)
         int labelWidth = ui->spriteLabel->width();
         int labelHeight = ui->spriteLabel->height();
 
+        // Calculate the size of each "pixel" block to scale the sprite to fit the canvas
         int pixelWidth = labelWidth / spriteWidth;
         int pixelHeight = labelHeight / spriteHeight;
         int pixelSize = max(1, min(pixelWidth, pixelHeight));
 
+        // Calculate the total area occupied by the scaled sprite
         int totalWidth = pixelSize * spriteWidth;
         int totalHeight = pixelSize * spriteHeight;
 
+        // Calculate offsets to center the sprite in the QLabel
         int offsetX = (labelWidth - totalWidth) / 2;
         int offsetY = (labelHeight - totalHeight) / 2;
 
-        // Convert screen position to logical (x, y) in sprite grid
-        int x = (mouseEvent->pos().x() - offsetX) / pixelSize;
-        int y = (mouseEvent->pos().y() - offsetY) / pixelSize;
+        // Lambda to convert screen coordinates to logical (x, y) in the sprite grid
+        auto getXY = [&](const QPoint& pos, int& x, int& y) {
+            x = (pos.x() - offsetX) / pixelSize;
+            y = (pos.y() - offsetY) / pixelSize;
+        };
 
-        if (x >= 0 && x < spriteWidth && y >= 0 && y < spriteHeight) {
+        // Handle mouse button press (begin drawing or interaction)
+        if (event->type() == QEvent::MouseButtonPress) {
+            QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+            int x, y;
+            getXY(mouseEvent->pos(), x, y);
 
-            if (isDrawing) {
+            // Start tracking mouse drag
+            mousePressed = true;
 
-                sprite.setPixelColor(x, y, color); // Replace with selected color later
+            // Only process if (x, y) is within bounds
+            if (x >= 0 && x < spriteWidth && y >= 0 && y < spriteHeight) {
 
-                // Update frame in frame manager.
-                QListWidgetItem *selectedItem = ui->frameStackWidget->currentItem();
+                // Perform drawing/erasing/color-picking
+                handleDrawingAction(x, y);
 
-                if (selectedItem) {
-                    int frameIndex = ui->frameStackWidget->row(selectedItem);
-                    emit updatePixelInFrame(frameIndex, y, x, color.red(), color.green(), color.blue(), color.alpha());
-                }
-
-                else {
-                    int frameIndex = 0;
-                    emit updatePixelInFrame(frameIndex, y, x, color.red(), color.green(), color.blue(), color.alpha());
-                }
-            }      
-            else if (isErasing) {
-
-                sprite.setPixelColor(x, y, QColor(255, 255, 255, 0)); // Replace with transparent color later
-
-                // Update frame in frame manager.
-                QListWidgetItem *selectedItem = ui->frameStackWidget->currentItem();
-
-                if (selectedItem) {
-                    int frameIndex = ui->frameStackWidget->row(selectedItem);
-                    emit updatePixelInFrame(frameIndex, y, x, 255, 255, 255, 0);
-                }
-
-                else {
-                    int frameIndex = 0;
-                    emit updatePixelInFrame(frameIndex, y, x, 255, 255, 255, 0);
-                }
-            }
-            else if (isGettingColor) {
-                color = sprite.pixelColor(x, y); // Set color to the selected pixel color
-                // Update spin boxes and sliders for every color channel
-                emit changeRedValue(color.red());
-                emit changeGreenValue(color.green());
-                emit changeBlueValue(color.blue());
-                emit changeAlphaValue(color.alpha());
+                // Redraw the canvas
+                updateCanvas();
             }
 
-            updateCanvas();
+            // Event handled
+            return true;
         }
 
-        // Event handled
-        return true;
+        // Handle mouse movement (continue drawing while dragging)
+        else if (event->type() == QEvent::MouseMove && mousePressed) {
+            QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+            int x, y;
+            getXY(mouseEvent->pos(), x, y);
+
+            // Only process if (x, y) is within bounds
+            if (x >= 0 && x < spriteWidth && y >= 0 && y < spriteHeight) {
+
+                // Continue drawing
+                handleDrawingAction(x, y);
+
+                // Redraw canvas
+                updateCanvas();
+            }
+
+            // Event handled
+            return true;
+        }
+
+        // Handle mouse release (end drawing or dragging)
+        else if (event->type() == QEvent::MouseButtonRelease) {
+
+            // Stop tracking mouse drag
+            mousePressed = false;
+
+            // Event handled
+            return true;
+        }
     }
 
-    // Default behavior
+    // Pass unhandled events to the default implementation
     return QMainWindow::eventFilter(watched, event);
+}
+
+// Method - Handles drawing, erasing, or color picking on the canvas based on the current mode.
+// Called from mouse event handlers when the user interacts with the sprite grid.
+void EditorWindow::handleDrawingAction(int x, int y) {
+
+    // If drawing mode is active
+    if (isDrawing) {
+
+        // Set the pixel at (x, y) to the current selected color
+        sprite.setPixelColor(x, y, color);
+
+        // Get the current frame index selected in the frame stack
+        int frameIndex = getCurrentFrameIndex();
+
+        // Notify the frame manager to update the pixel in the current frame
+        emit updatePixelInFrame(frameIndex, y, x, color.red(), color.green(), color.blue(), color.alpha());
+    }
+
+    // If eraser mode is active
+    else if (isErasing) {
+
+        // Set the pixel at (x, y) to a fully transparent color (erased)
+        sprite.setPixelColor(x, y, QColor(255, 255, 255, 0));
+
+        // Get the current frame index selected in the frame stack
+        int frameIndex = getCurrentFrameIndex();
+
+        // Notify the frame manager to update the pixel in the current frame as erased
+        emit updatePixelInFrame(frameIndex, y, x, 255, 255, 255, 0);
+    }
+
+    // If color picker mode is active
+    else if (isGettingColor) {
+
+        // Get the color at (x, y) from the sprite
+        color = sprite.pixelColor(x, y);
+
+        // Update the spin boxes and color preview UI with the selected color values
+        emit changeRedValue(color.red());
+        emit changeGreenValue(color.green());
+        emit changeBlueValue(color.blue());
+        emit changeAlphaValue(color.alpha());
+    }
+}
+
+// Helper Method - Retrieves the index of the currently selected frame in the frame stack.
+// Returns 0 if no frame is selected (default to the first frame).
+int EditorWindow::getCurrentFrameIndex() {
+
+    // Get the currently selected item in the frameStackWidget (the list of frames)
+    QListWidgetItem *selectedItem = ui->frameStackWidget->currentItem();
+
+    // If an item is selected, return its index (row number) in the list.
+    // If no item is selected (e.g., at startup), default to frame index 0.
+    return selectedItem ? ui->frameStackWidget->row(selectedItem) : 0;
 }
