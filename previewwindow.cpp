@@ -37,7 +37,7 @@ void PreviewWindow::animation() {
 void PreviewWindow::animate(bool animationBool) {
     std::vector<Frame> frames = emit getFrames();
 
-    while (animationBool) {
+    while (animationBool && this->isVisible()) {
         for (const Frame& frame : frames) {
             showFrame(frame);
         }
