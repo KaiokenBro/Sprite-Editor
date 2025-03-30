@@ -42,3 +42,7 @@ void FrameManager::updateFrame(int frameIndex, int rowIndex, int columnIndex, in
 void FrameManager::getPixelsForFrame(int frameIndex) {
     emit foundFrame(frames.at(frameIndex).getPixels());
 }
+
+std::vector<Frame> FrameManager::sendFrames(){
+    return frames;
+}

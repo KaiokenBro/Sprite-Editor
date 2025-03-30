@@ -10,28 +10,32 @@
  * @date 03/23/2025
  */
 
-previewwindow::previewwindow(int height, int width, FrameManager *frameManager, QWidget *parent)
+PreviewWindow::PreviewWindow(int height, int width, FrameManager *frameManager, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::previewwindow)
     , actualHeight(height)
     , actualWidth(width)
-    , frameManager(frameManager)
     , sprite(QImage(actualWidth, actualHeight, QImage::Format_ARGB32))
 {
     ui->setupUi(this);
+
+    connect(this,
+            &PreviewWindow::getFrames,
+            frameManager,
+            &FrameManager::sendFrames);
 }
 
-previewwindow::~previewwindow() {
+PreviewWindow::~PreviewWindow() {
     delete ui;
 }
 
-void previewwindow::animation() {
+void PreviewWindow::animation() {
     bool animateBool = ui->animateButton->isChecked();
     animate(animateBool);
 }
 
-void previewwindow::animate(bool animationBool) {
-    std::vector<Frame> frames = frameManager->frames;
+void PreviewWindow::animate(bool animationBool) {
+    std::vector<Frame> frames = emit getFrames();
 
     while (animationBool) {
         for (const Frame& frame : frames) {
@@ -41,7 +45,7 @@ void previewwindow::animate(bool animationBool) {
     }
 }
 
-void previewwindow::showFrame(Frame frame) {
+void PreviewWindow::showFrame(Frame frame) {
     std::vector<std::vector<QColor>> pixels = frame.getPixels();
 
     // Dimensions of the QLabel display area
@@ -106,5 +110,3 @@ void previewwindow::showFrame(Frame frame) {
     timer.start(1000/ui->fpsSlider->sliderPosition());
     loop.exec();
 }
-
-

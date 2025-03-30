@@ -65,6 +65,8 @@ public slots:
 
     void getPixelsForFrame(int frameIndex);
 
+    std::vector<Frame> sendFrames();
+
 signals:
 
     /*

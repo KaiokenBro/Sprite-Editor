@@ -19,14 +19,14 @@
 
 namespace Ui { class previewwindow; }
 
-class previewwindow : public QMainWindow {
+class PreviewWindow : public QMainWindow {
     Q_OBJECT
 
 public:
 
-    explicit previewwindow(int spriteHeight, int spriteWidth, FrameManager *frameManager, QWidget *parent = nullptr);
+    explicit PreviewWindow(int spriteHeight, int spriteWidth, FrameManager *frameManager, QWidget *parent = nullptr);
 
-    ~previewwindow();
+    ~PreviewWindow();
 
 private:
 
@@ -37,9 +37,6 @@ private:
 
     //Actual width of the sprite
     int actualWidth;
-
-    //Pointer to the frame manager to get the frames
-    FrameManager * frameManager;
 
     //Blank QImage to be used to draw the sprite
     QImage sprite;
@@ -63,6 +60,11 @@ public slots:
      */
     void animate(bool);
 
+signals:
+    /*
+     * Signal sent to the frame manager to get the frames for animation
+     */
+    std::vector<Frame> getFrames();
 };
 
 #endif // PREVIEWWINDOW_H

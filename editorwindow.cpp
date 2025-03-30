@@ -301,7 +301,7 @@ void EditorWindow::enableCopyColor() {
 void EditorWindow::animateClicked() {
 
     // Create preview window
-    previewwindow *preview = new previewwindow(spriteHeight, spriteWidth, frameManager, this);
+    PreviewWindow *preview = new PreviewWindow(spriteHeight, spriteWidth, frameManager, this);
 
     // Show preview window
     preview->show();
