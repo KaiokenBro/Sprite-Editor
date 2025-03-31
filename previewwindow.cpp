@@ -77,8 +77,8 @@ void PreviewWindow::showFrame(Frame frame) {
     // Create the visual canvas image (what the user sees)
     QPixmap canvas(labelWidth, labelHeight);
 
-    // Set background color to White
-    canvas.fill(Qt::white);
+    // Set background color to dark gray
+    canvas.fill(QColor(100, 100, 100, 50));
 
     QPainter painter(&canvas);
 
