@@ -1,24 +1,30 @@
+/**
+ * @file previewwindow.cpp
+ * @author Samuel Garcia
+ *
+ * @brief Implements the logic for the PreviewWindow class which renders animated previews
+ * of sprite frames at user-defined speed and resolution.
+ *
+ * @date 03/31/2025
+ */
+
 #include "previewwindow.h"
 #include "ui_previewwindow.h"
 
-/**
- * @file previewwindow.cpp
- * @authors Samuel Garcia,
- *
- * @brief This file handles the preview window and the animation of the sprite.
- *
- * @date 03/23/2025
- */
+using std::min;
+using std::max;
+using std::vector;
 
-PreviewWindow::PreviewWindow(int height, int width, FrameManager *frameManager, QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::previewwindow)
-    , actualHeight(height)
-    , actualWidth(width)
-    , sprite(QImage(actualWidth, actualHeight, QImage::Format_ARGB32))
+PreviewWindow::PreviewWindow(FrameManager* frameManager, int height, int width, QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::previewwindow),
+    actualHeight(height),
+    actualWidth(width),
+    sprite(QImage(actualWidth, actualHeight, QImage::Format_ARGB32))
 {
     ui->setupUi(this);
 
+    // Connect signal to fetch all frames from FrameManager when animation starts
     connect(this,
             &PreviewWindow::getFrames,
             frameManager,
@@ -32,7 +38,7 @@ PreviewWindow::~PreviewWindow() {
 
 void PreviewWindow::animation() {
     bool animateBool = ui->animateButton->isChecked();
-    std::vector<Frame> frames = emit getFrames();
+    vector<Frame> frames = emit getFrames();
 
     while (animateBool && this->isVisible()) {
         for (const Frame& frame : frames) {
@@ -43,7 +49,7 @@ void PreviewWindow::animation() {
 }
 
 void PreviewWindow::showFrame(Frame frame) {
-    std::vector<std::vector<QColor>> pixels = frame.getPixels();
+    vector<vector<QColor>> pixels = frame.getPixels();
 
     // Dimensions of the QLabel display area
     int labelWidth = ui->spriteLabel->width();
@@ -60,7 +66,7 @@ void PreviewWindow::showFrame(Frame frame) {
     // Calculate pixel size so the sprite fits inside the label
     int pixelWidth = labelWidth / actualWidth;
     int pixelHeight = labelHeight / actualHeight;
-    int pixelSize = std::max(1, std::min(pixelWidth, pixelHeight));
+    int pixelSize = max(1, min(pixelWidth, pixelHeight));
 
     // Calculate the total size of the scaled sprite
     int totalWidth = pixelSize * actualWidth;
@@ -78,7 +84,6 @@ void PreviewWindow::showFrame(Frame frame) {
 
     QPainter painter(&canvas);
 
-
     for (int y = 0; y < actualHeight; ++y) {
         for (int x = 0; x < actualWidth; ++x) {
             QColor color = pixels.at(y).at(x);
@@ -89,17 +94,12 @@ void PreviewWindow::showFrame(Frame frame) {
     // Draw each pixel from the logical sprite onto the canvas
     for (int y = 0; y < actualHeight; ++y) {
         for (int x = 0; x < actualWidth; ++x) {
-            // Get color at (x, y)
             QColor color = sprite.pixelColor(x, y);
             QRect rect(offsetX + x * pixelSize, offsetY + y * pixelSize, pixelSize, pixelSize);
-
-            // Fill pixel
             painter.fillRect(rect, color);
         }
-
     }
 
-    // Update the QLabel with the new canvas image
     ui->spriteLabel->setPixmap(canvas);
 
     // Timer to wait 1/FPS seconds before drawing next image

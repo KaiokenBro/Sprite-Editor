@@ -1,3 +1,14 @@
+/**
+ * @file mainwindow.cpp
+ * @author Harrison Doppelt
+ *
+ * @brief Implementation of the MainWindow class — the entry UI for creating or loading sprites.
+ *
+ * Provides logic for input validation, file loading, and transition to the EditorWindow.
+ *
+ * @date 03/31/2025
+ */
+
 #include "mainwindow.h"
 #include "editorwindow.h"
 #include "ui_mainwindow.h"
@@ -7,31 +18,22 @@
 #include <QMessageBox>
 #include <QString>
 
-// Constructor
 MainWindow::MainWindow(SaveLoadManager* saveLoadManager, FrameManager* frameManager, EditorWindow* editorWindow, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
     this->editorWindow = editorWindow;
     this->frameManager = frameManager;
     this->saveLoadManager = saveLoadManager;
 
     // Create a validator to restrict input to integers between 1 and 64
     QIntValidator *validator = new QIntValidator(1, 64, this);
-
-    // Apply validator to width and height input
     ui->widthLineEdit->setValidator(validator);
     ui->heightLineEdit->setValidator(validator);
 
-    // Initially disable setSizeButton
     ui->setSizeButton->setEnabled(false);
-
-    // Initially disable the createButton
     ui->createButton->setEnabled(false);
-
-    // Initially disable the openButton
     ui->openButton->setEnabled(false);
 
     ui->createFileBox->setStyleSheet(
@@ -40,61 +42,61 @@ MainWindow::MainWindow(SaveLoadManager* saveLoadManager, FrameManager* frameMana
         "}"
         );
 
-    // When widthLineEdit is changed, check to enable setSizeButton
+    // Connect width input to input validation
     connect(ui->widthLineEdit,
             &QLineEdit::textChanged,
             this,
             &MainWindow::validateInputs);
 
-    // When heightLineEdit is changed, check to enable setSizeButton
+    // Connect height input to input validation
     connect(ui->heightLineEdit,
             &QLineEdit::textChanged,
             this,
             &MainWindow::validateInputs);
 
-    // When setSizeButton is clicked, update statusLabel
+    // Connect "Set Size" button to validation and visual feedback
     connect(ui->setSizeButton,
             &QPushButton::clicked,
             this,
             &MainWindow::onSetSizeButtonClicked);
 
-    // When createButton is clicked, openEditorWindow
+    // Connect "Create" button to opening a new sprite in EditorWindow
     connect(ui->createButton,
             &QPushButton::clicked,
             this,
             &MainWindow::openEditorWindowNew);
 
-    // When loadButton is clicked, loadFile
+    // Connect "Load File" button to file dialog for loading .ssp file
     connect(ui->loadButton,
             &QPushButton::clicked,
             this,
             &MainWindow::loadFile);
 
-    // When openButton is clicked, openEditorWindow
+    // Connect "Open" button to load the selected file and enter editor
     connect(ui->openButton,
             &QPushButton::clicked,
             this,
             &MainWindow::openEditorWindowLoad);
 
-    // When widthLineEdit's value is changed, update heightLineEdit's value to reflect the same
+    // Keep height synchronized with width input
     connect(ui->widthLineEdit,
             &QLineEdit::textChanged,
             this,
             &MainWindow::syncHeightToWidth);
 
-    // When heightLineEdit's value is changed, update widthLineEdit's value to reflect the same
+    // Keep width synchronized with height input
     connect(ui->heightLineEdit,
             &QLineEdit::textChanged,
             this,
             &MainWindow::syncWidthToHeight);
 
-    //
+    // Invalidate confirmation when width is changed
     connect(ui->widthLineEdit,
             &QLineEdit::textChanged,
             this,
             &MainWindow::invalidateSizeConfirmation);
 
-    //
+    // Invalidate confirmation when height is changed
     connect(ui->heightLineEdit,
             &QLineEdit::textChanged,
             this,
@@ -102,29 +104,24 @@ MainWindow::MainWindow(SaveLoadManager* saveLoadManager, FrameManager* frameMana
 
 }
 
-// Destructor
 MainWindow::~MainWindow() {
     delete ui;
 }
 
-// Slot - UI
 void MainWindow::disableLoadButton() {
     ui->loadButton->setEnabled(false);
 }
 
-// Slot - UI
 void MainWindow::enableLoadButton() {
     ui->loadButton->setEnabled(true);
 }
 
-// Slot - UI
 void MainWindow::invalidateSizeConfirmation() {
     ui->statusLabel->setText("❌");
     ui->statusLabel->setStyleSheet("color: red; font-size: 18px;");
     ui->createButton->setEnabled(false);
 }
 
-// Slot - UI
 void MainWindow::validateInputs() {
 
     // Check if both fields have non-empty values
@@ -135,21 +132,18 @@ void MainWindow::validateInputs() {
     ui->setSizeButton->setEnabled(validWidth && validHeight);
 }
 
-// Slot - Syncs Width and Height value box
 void MainWindow::syncHeightToWidth(const QString &text) {
     if (ui->heightLineEdit->text() != text) {
         ui->heightLineEdit->setText(text);
     }
 }
 
-// Slot - Syncs Width and Height value box
 void MainWindow::syncWidthToHeight(const QString &text) {
     if (ui->widthLineEdit->text() != text) {
         ui->widthLineEdit->setText(text);
     }
 }
 
-// Slot - Validates size of sprite
 void MainWindow::onSetSizeButtonClicked() {
     int width = ui->widthLineEdit->text().toInt();
     int height = ui->heightLineEdit->text().toInt();
@@ -172,30 +166,16 @@ void MainWindow::onSetSizeButtonClicked() {
     }
 }
 
-// Slot - Transitions to the editorwindow UI
-// Used for new file
 void MainWindow::openEditorWindowNew() {
-
     int width = ui->widthLineEdit->text().toInt();
     int height = ui->heightLineEdit->text().toInt();
-
     editorWindow->reinitializeEditor(width, height);
-
-    // Show the editor window
     editorWindow->show();
-
-    // Close the main window
     this->close();
 }
 
-// Slot - Transitions to the editorwindow UI
-// Used for loading file
 void MainWindow::openEditorWindowLoad() {
-
-    // Get file path from the label
     QString filePath = ui->filePathLabel->text();
-
-    // Attempt to load from the file
     bool success = saveLoadManager->loadFromFile(*frameManager, filePath);
 
     // If loading failed, show an error and stop
@@ -204,24 +184,15 @@ void MainWindow::openEditorWindowLoad() {
         return;
     }
 
-    // Use the first frame's size to reinitialize the editor
     int newWidth = frameManager->width;
     int newHeight = frameManager->height;
-
-    // Use new method for initializing loaded data
     editorWindow->initializeFromLoadedFile(newWidth, newHeight);
-
-    // Show the editor window
     editorWindow->show();
-
-    // Close the main window
     this->close();
 }
 
-// Slot - Opens file manager for selecting .ssp files to load
 void MainWindow::loadFile() {
 
-    // Open a file dialog to select only .ssp files
     QString fileName = QFileDialog::getOpenFileName(
         this,                               // Parent widget
         "Open Sprite File",                 // Dialog title
@@ -238,11 +209,7 @@ void MainWindow::loadFile() {
             return;  // Reject invalid files
         }
 
-        // Update the file path label
         ui->filePathLabel->setText(fileName);
-
-        // Enable the "Open" button now that a valid file is selected
         ui->openButton->setEnabled(true);
     }
-
 }

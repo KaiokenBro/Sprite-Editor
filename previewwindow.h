@@ -1,38 +1,52 @@
 #ifndef PREVIEWWINDOW_H
 #define PREVIEWWINDOW_H
 
+/**
+ * @file previewwindow.h
+ * @author Samuel Garcia
+ *
+ * @brief Declares the PreviewWindow class, which displays animated previews of sprite frames.
+ *
+ * The PreviewWindow connects to the FrameManager to retrieve all current frames and
+ * animates them at a configurable FPS. It also supports toggling between scaled preview
+ * and actual pixel size.
+ *
+ * @date 03/31/2025
+ */
+
+#include "frame.h"
+#include "framemanager.h"
+
 #include <QMainWindow>
 #include <QTimer>
 #include <QImage>
 #include <QPainter>
-#include "frame.h"
-#include "framemanager.h"
 
-/**
- * @file previewwindow.h
- * @authors Samuel Garcia,
- *
- * @brief This is the header file for previewwindow.cpp
- *
- * @date 03/23/2025
- */
+using std::vector;
 
 namespace Ui { class previewwindow; }
 
+/**
+ * @class PreviewWindow
+ *
+ * @brief Provides a window to preview sprite animation in real time.
+ *
+ * This class is responsible for retrieving frames from FrameManager and displaying them
+ * in a looped animation using QLabel and QPainter. It supports resolution scaling and FPS control.
+ */
 class PreviewWindow : public QMainWindow {
     Q_OBJECT
 
 public:
 
     /**
-     * @brief PreviewWindow - Constructor.
-     * @param spriteHeight - the actual height of the sprite in pixels.
-     * @param spriteWidth - the actual width of teh sprite in pixels.
-     * @param frameManager - the pointer to the framemanager class to set up signals.
-     * @param parent - QObject needed for the use of objects in qt.
+     * @brief Constructs the PreviewWindow.
+     * @param spriteHeight Actual height of each sprite frame in pixels.
+     * @param spriteWidth Actual width of each sprite frame in pixels.
+     * @param frameManager Pointer to the FrameManager instance for accessing frames.
+     * @param parent Optional QWidget parent.
      */
-
-    explicit PreviewWindow(int spriteHeight, int spriteWidth, FrameManager *frameManager, QWidget *parent = nullptr);
+    explicit PreviewWindow(FrameManager* frameManager, int spriteHeight, int spriteWidth, QWidget *parent = nullptr);
 
     /**
      * @brief Destructor for the PreveiwWindow.
@@ -41,28 +55,39 @@ public:
 
 private:
 
-    //The preview window ui pointer
+    /**
+     * @brief Pointer to the UI layout for the preview window.
+     */
     Ui::previewwindow *ui;
 
-    //Actual height of the sprite
+    /**
+     * @brief Height of the sprite in pixels.
+     */
     int actualHeight;
 
-    //Actual width of the sprite
+    /**
+     * @brief Width of the sprite in pixels.
+     */
     int actualWidth;
 
-    //Blank QImage to be used to draw the sprite
+    /**
+     * @brief Internal QImage used to represent the current frame being drawn.
+     */
     QImage sprite;
 
 public slots:
 
     /**
-     * @brief Toggles the animation on to be looped through until it is stopped.
+     * @brief Starts or stops the animation based on user interaction.
+     *
+     * Continuously cycles through all frames while the animate toggle is active
+     * and the preview window remains visible.
      */
     void animation();
 
     /**
-     * @brief Shows the frame in the preview window.
-     * @param frame - the Frame to be displayed.
+     * @brief Renders a single frame in the preview display.
+     * @param frame The Frame object to be rendered.
      */
     void showFrame(Frame);
 
@@ -70,9 +95,10 @@ public slots:
 signals:
 
     /**
-     * @brief Signal sent to the frame manager to get the frames for animation
+     * @brief Requests the list of frames from FrameManager for animation playback.
+     * @return A vector of all current frames in the project.
      */
-    std::vector<Frame> getFrames();
+    vector<Frame> getFrames();
 };
 
 #endif // PREVIEWWINDOW_H

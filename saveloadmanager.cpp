@@ -1,11 +1,13 @@
 /**
  * @file saveloadmanager.cpp
- * @authors Victor Valdez Landa, Harrison Doppelt
+ * @author Victor Valdez Landa
  *
- * @brief This file defines the implementation of the of saving and loading the images of sprites from the Sprite Editor
+ * @brief Implementation of the SaveLoadManager class for saving and loading sprite data in the Sprite Editor.
  *
- * Checked by Victor Valdez Landa
- * @date 03/30/2025
+ * This file provides functionality for converting the internal sprite representation into JSON
+ * and saving it to disk, as well as loading and reconstructing sprite frames from previously saved files.
+ *
+ * @date 03/31/2025
  */
 
 #include "saveloadmanager.h"
@@ -17,29 +19,18 @@
 #include <QColor>
 #include <QDebug>
 
-// Constructor
-SaveLoadManager::SaveLoadManager(QObject *parent)
-    : QObject{parent}
-{}
+using std::vector;
 
-// Method - Serialize (Object -> File)
-// Saves all frames managed by FrameManager to a JSON file at the given file path.
+SaveLoadManager::SaveLoadManager(QObject *parent) : QObject{parent} {}
+
 bool SaveLoadManager::saveToFile(FrameManager& manager, QString filePath) {
-
-    // Create a JSON array to hold all the serialized frames
     QJsonArray framesArray;
 
     // Loop through each frame in the FrameManager
     for (size_t i = 0; i < manager.frames.size(); ++i) {
-
-        // Get the frame at index i
         Frame frame = manager.frames[i];
-
-        // JSON array to hold this frame's pixel data
         QJsonArray pixelArray;
-
-        // Get the 2D array of pixel colors
-        std::vector<std::vector<QColor>> pixels = frame.getPixels();
+        vector<vector<QColor>> pixels = frame.getPixels();
 
         // Loop through each row (y) of the frame
         for (int y = 0; y < frame.getHeight(); ++y) {
@@ -58,8 +49,6 @@ bool SaveLoadManager::saveToFile(FrameManager& manager, QString filePath) {
                 pixelObj["g"] = color.green();  // Green component
                 pixelObj["b"] = color.blue();   // Blue component
                 pixelObj["a"] = color.alpha();  // Alpha (transparency)
-
-                // Add this pixel object to the pixel array
                 pixelArray.append(pixelObj);
             }
         }
@@ -89,21 +78,12 @@ bool SaveLoadManager::saveToFile(FrameManager& manager, QString filePath) {
         return false;   // Return false if file couldn't be opened
     }
 
-    // Write the JSON document to the file
     file.write(doc.toJson());
-
-    // Close the file
     file.close();
-
-    // Successfully saved the file
     return true;
 }
 
-// Method - Deserialize (File -> Object)
-// Loads all frames and pixel data from a JSON file into the FrameManager.
 bool SaveLoadManager::loadFromFile(FrameManager& manager, QString filePath) {
-
-    // Open the file at the specified path
     QFile file(filePath);
 
     // If the file can't be opened, log an error and return false
@@ -112,13 +92,8 @@ bool SaveLoadManager::loadFromFile(FrameManager& manager, QString filePath) {
         return false;
     }
 
-    // Read the entire file contents into a byte array
     QByteArray data = file.readAll();
-
-    // Always close the file after reading
     file.close();
-
-    // Convert the byte array into a JSON document
     QJsonDocument doc = QJsonDocument::fromJson(data);
 
     // If the top-level JSON is not an object, log an error and return false
@@ -133,27 +108,18 @@ bool SaveLoadManager::loadFromFile(FrameManager& manager, QString filePath) {
 
     int height = root["height"].toInt();
     int width = root["width"].toInt();
-
     manager.frames.clear();
     manager.height = height;
     manager.width = width;
 
     // Loop through each frame in the array
     for (const QJsonValue& frameVal : framesArray) {
-
-        // Get the frame object
         QJsonObject frameObj = frameVal.toObject();
-
-        // Get the array of pixel objects
         QJsonArray pixelArray = frameObj["pixels"].toArray();
-
-        // Create a new Frame with the given dimensions
         Frame newFrame(height, width);
 
         // Loop through each pixel and update the new frame
         for (const QJsonValue& pixelVal : pixelArray) {
-
-            // Get pixel as JSON object
             QJsonObject pixelObj = pixelVal.toObject();
 
             // Extract pixel properties
@@ -172,6 +138,5 @@ bool SaveLoadManager::loadFromFile(FrameManager& manager, QString filePath) {
         manager.addFrameJson(newFrame);
     }
 
-    // Return success
     return true;
 }

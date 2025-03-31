@@ -3,80 +3,100 @@
 
 /**
  * @file frame.h
+ * @author Richard Nghiem
  *
- * @authors
+ * @brief Declares the Frame class, which represents a 2D grid of pixels (QColor) that make up a single sprite frame.
  *
- * @brief A representation of a frame that contains pixels that can comprise an image.
+ * A Frame contains a 2D vector of QColor objects, each representing a pixel with RGBA values.
+ * Frames are used to store and manipulate individual layers of animation or static sprite images.
  *
- * @date 03/30/2025
- *
- * Checked By
- *
+ * @date 03/31/2025
  */
 
 #include <QColor>
 
+using std::vector;
+
+/**
+ * @class Frame
+ *
+ * @brief Represents a single frame of a sprite composed of a grid of RGBA pixels.
+ *
+ * Provides methods for updating individual pixels, rotating the frame, and retrieving
+ * pixel data and frame dimensions.
+ */
 class Frame {
 
 private:
 
-    // The frame pixels. Each element is a row of pixels. Pixels are represented by QColor objects, which
-    // have RGBA values.
-    std::vector<std::vector<QColor>> pixels;
+    /**
+     * @brief 2D vector of pixels, where each element is a QColor with RGBA values.
+     *
+     * The outer vector represents rows; the inner vector represents columns.
+     */
+    vector<vector<QColor>> pixels;
 
-    // Height of the frame in pixels.
+    /**
+     * @brief The height of the frame in pixels.
+     */
     int height;
 
-    // Width of the frame in pixels.
+    /**
+     * @brief The width of the frame in pixels.
+     */
     int width;
 
 public:
 
     /**
-     * @brief This method updates a pixel in the frame.
-     * @param rowIndex - The row of the updated pixel.
-     * @param columnIndex - The column of the updated pixel.
-     * @param red - The red value for the updated pixel.
-     * @param green - The green value for the updated pixel.
-     * @param blue - The blue value for the updated pixel.
-     * @param alpha - The alpha value for the updated pixel.
-     */
-    void updateFrame(int rowIndex, int columnIndex, int red, int green, int blue, int alpha);
-
-    /**
-     * @brief Default constructor to create an empty frame and sets the height and width to zero.
+     * @brief Default constructor. Creates an empty frame with zero height and width.
      */
     Frame();
 
     /**
-     * @brief Constructor that creates an empty frame with specified height and width. The pixels are filled in with
-     * a default QColor object.
-     * @param width - The width of the frame in pixels.
-     * @param height - The height of the frame in pixels.
+     * @brief Parameterized constructor. Initializes a frame with the specified height and width.
+     *
+     * All pixels are initialized to fully transparent white (RGBA: 255, 255, 255, 0).
+     *
+     * @param height The height of the frame (number of rows).
+     * @param width The width of the frame (number of columns).
      */
     Frame(int height, int width);
 
     /**
-     * @brief Getter method for pxels.
-     * @return The pixels vector.
+     * @brief Updates a specific pixel in the frame with new RGBA values.
+     * @param rowIndex The row index (y-coordinate) of the pixel to update.
+     * @param columnIndex The column index (x-coordinate) of the pixel to update.
+     * @param red Red component (0–255).
+     * @param green Green component (0–255).
+     * @param blue Blue component (0–255).
+     * @param alpha Alpha (opacity) component (0–255).
      */
-    std::vector<std::vector<QColor>> getPixels();
+    void updateFrame(int rowIndex, int columnIndex, int red, int green, int blue, int alpha);
 
     /**
-     * @brief Perform a 90 degrees clockwise rotation on all pixels. This is done by first transposing the pixels
-     * and then reversing the order of pixels in each row. The frame must be a square (equal height and width).
+     * @brief Retrieves the full 2D pixel data of the frame.
+     * @return A 2D vector of QColor objects representing all pixels in the frame.
+     */
+    vector<vector<QColor>> getPixels();
+
+    /**
+     * @brief Rotates the frame 90 degrees clockwise.
+     *
+     * This is done by transposing the pixel matrix and then reversing each row.
+     * Note: This operation assumes the frame is square (height == width).
      */
     void rotateFrame();
 
     /**
-     * @brief getHeight - Method to get the height of a frame.
-     * @return - returns the height of a frame.
+     * @brief Gets the height of the frame.
+     * @return The height in pixels.
      */
     int getHeight();
 
     /**
-     * @brief getWidth - Methid ti get the width of a frame.
-     * @return - returns the width of a frame.
+     * @brief Gets the width of the frame.
+     * @return The width in pixels.
      */
     int getWidth();
 

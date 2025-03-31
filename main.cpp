@@ -1,6 +1,8 @@
 /**
  * @file main.cpp
  *
+ * @brief Entry point for the Sprite Editor application. Initializes Qt application and main UI components.
+ *
  * Team Members:
  * - Victor Valdez Landa
  * - Harrison Doppelt
@@ -32,6 +34,12 @@
 
 #include <QApplication>
 
+/**
+ * @brief The main function initializes the Qt application and shows the MainWindow.
+ * @param argc Command-line argument count.
+ * @param argv Command-line argument values.
+ * @return Exit code returned by the Qt application event loop.
+ */
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
     QApplication::setStyle("Fusion");

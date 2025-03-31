@@ -1,81 +1,124 @@
 #ifndef FRAMEMANAGER_H
 #define FRAMEMANAGER_H
 
-#include <QMainWindow>
-#include <QObject>
+/**
+ * @file framemanager.h
+ * @author Charlie Jones
+ * @brief Declaration of the FrameManager class, which manages a collection of animation frames for a sprite.
+ * @date 03/31/2025
+ */
+
 #include "frame.h"
 
+#include <QMainWindow>
+#include <QObject>
+
+using std::vector;
+
+/**
+ * @class FrameManager
+ *
+ * @brief Manages a list of frames used in sprite animation.
+ *
+ * Responsible for creating, updating, duplicating, deleting, and rotating frames.
+ */
 class FrameManager : public QObject {
     Q_OBJECT
 
 public:
 
-    // The existing frames in the frame manager.
-    std::vector<Frame> frames;
+    /**
+     * @brief Constructs a FrameManager instance with initial frame dimensions.
+     * @param height The height of each frame.
+     * @param width The width of each frame.
+     * @param parent Optional parent QObject.
+     */
+    explicit FrameManager(int height, int width, QObject *parent = nullptr);
 
-    // Height of the frame in pixels
+    /**
+     * @brief The list of frames currently managed.
+     */
+    vector<Frame> frames;
+
+    /**
+     * @brief The height of each frame in pixels.
+     */
     int height;
 
-    // Width of each frame in pixels
+    /**
+     * @brief The width of each frame in pixels.
+     */
     int width;
-
-public:
-
-    explicit FrameManager(int height, int width, QObject *parent = nullptr);
 
 public slots:
 
-    /*
-     * This method adds a new frame to the frame manager. The frame is always added to the end.
-     * @param frameToAdd - The frame to be added to the frame manager.
+    /**
+     * @brief Adds a new blank frame to the end of the list using the current width and height.
      */
     void addFrame();
 
+    /**
+     * @brief Adds a deserialized frame to the frame list (used during JSON loading).
+     * @param frame The frame to be added.
+     */
     void addFrameJson(Frame frame);
 
-    /*
-     * This method deletes the current frame selected from the frame manager.
-     * @param frameIndex - The index of the frame to update.
+    /**
+     * @brief Deletes the frame at the given index if more than one frame exists.
+     * @param frameIndex The index of the frame to delete.
      */
     void deleteFrame(int frameIndex);
 
-    /*
-     * This method copies the current frame selected and adds it to the end of the frame manager.
-     * @param frameIndex - The index of the frame to update.
+    /**
+     * @brief Duplicates the frame at the given index and appends it to the list.
+     * @param frameIndex The index of the frame to copy.
      */
     void copyFrame(int frameIndex);
 
-    /*
-     * This method updates a pixel in a specified frame.
-     * @param frameIndex - The index of the frame to update.
-     * @param rowIndex - The row of the updated pixel.
-     * @param columnIndex - The column of the updated pixel.
-     * @param red - The red value for the updated pixel.
-     * @param green - The green value for the updated pixel.
-     * @param blue - The blue value for the updated pixel.
-     * @param alpha - The alpha value for the updated pixel.
+    /**
+     * @brief Updates the pixel at (rowIndex, columnIndex) in a specified frame.
+     * @param frameIndex Index of the frame to modify.
+     * @param rowIndex Y-coordinate of the pixel.
+     * @param columnIndex X-coordinate of the pixel.
+     * @param red Red value of the new color (0–255).
+     * @param green Green value of the new color (0–255).
+     * @param blue Blue value of the new color (0–255).
+     * @param alpha Alpha value of the new color (0–255).
      */
     void updateFrame(int frameIndex, int rowIndex, int columnIndex, int red, int green, int blue, int alpha);
 
+    /**
+     * @brief Emits the pixel data for the frame at the given index.
+     * @param frameIndex The index of the frame to retrieve.
+     */
     void getPixelsForFrame(int frameIndex);
 
-    std::vector<Frame> sendFrames();
+    /**
+     * @brief Returns all frames currently stored.
+     * @return A vector containing all Frame objects.
+     */
+    vector<Frame> sendFrames();
 
-    /*
-     * Rotates a frame given a frame index. The frame is expected to be a square (equal height and width).
-     * @param frameIndex - The frame to rotate.
+    /**
+     * @brief Rotates the specified frame 90 degrees clockwise.
+     *
+     * The frame must be square (height == width).
+     *
+     * @param frameIndex The index of the frame to rotate.
      */
     void rotate90Clockwise(int frameIndex);
 
 signals:
 
-    /*
-     * Send stored pixels of a frame to the canvas.
+    /**
+     * @brief Signal emitted when a frame is requested for display.
+     * @param pixels The 2D pixel data of the selected frame.
      */
-    void foundFrame(std::vector<std::vector<QColor>> pixels);
+    void foundFrame(vector<vector<QColor>> pixels);
 
-    /*
-     * Let the UI know the number of existing frames.
+    /**
+     * @brief Signal emitted after a new frame has been added.
+     * @param framesCount The total number of frames after the addition.
      */
     void frameAdded(int framesCount);
 };

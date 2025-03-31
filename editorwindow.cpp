@@ -1,3 +1,18 @@
+/**
+ * @file editorwindow.cpp
+ * @author Harrison Doppelt
+ *
+ * @brief This file contains the implementation of the EditorWindow class,
+ * which provides the main interface for drawing, editing, saving, and managing
+ * sprite frames in the sprite editor application.
+ *
+ * The EditorWindow is responsible for capturing user input (mouse events, button clicks),
+ * performing canvas operations (draw, erase, invert, etc.), and communicating with the
+ * FrameManager and SaveLoadManager to persist sprite state.
+ *
+ * @date 03/31/2025
+ */
+
 #include "editorwindow.h"
 #include "ui_editorwindow.h"
 #include "previewwindow.h"
@@ -10,16 +25,14 @@
 
 using std::min;
 using std::max;
+using std::vector;
 
-// Constructor
 EditorWindow::EditorWindow(SaveLoadManager* saveLoadManager, FrameManager* frameManager, int width, int height, QWidget *parent) :
-    QMainWindow(parent),            // Call base QMainWindow constructor
-    ui(new Ui::EditorWindow),       // Initialize UI pointer
-    spriteWidth(width),             // Store user-defined width
-    spriteHeight(height)            // Store user-defined height
+    QMainWindow(parent),
+    ui(new Ui::EditorWindow),
+    spriteWidth(width),
+    spriteHeight(height)
 {
-
-    // Set up UI components
     ui->setupUi(this);
 
     this->saveLoadManager = saveLoadManager;
@@ -42,169 +55,157 @@ EditorWindow::EditorWindow(SaveLoadManager* saveLoadManager, FrameManager* frame
 
     color = QColor::fromRgb(0, 0, 0, 255);
 
-    //////////////////////////////////////////////////
-    ////////   UI -> UI CONNECTIONS        //////////
-    /////////////////////////////////////////////////
-
-    // When invertButton clicked, invert pixel colors
+    // Connect "Invert" button to inverting all pixel colors on the canvas
     connect(ui->invertButton,
             &QPushButton::clicked,
             this,
             &EditorWindow::invertColor);
 
-    // When drawButton clicked, enable drawing
+    // Connect "Copy Color" button to enable color picking mode
     connect(ui->copyButton,
             &QPushButton::clicked,
             this,
             &EditorWindow::enableCopyColor);
 
-    // When eraserButton clicked, enable erasing
+    // Connect "Eraser" button to enable eraser mode
     connect(ui->eraserButton,
             &QPushButton::clicked,
             this,
             &EditorWindow::enableEraser);
 
-    // When drawButton clicked, enable drawing
+    // Connect "Draw" button to enable drawing mode
     connect(ui->drawButton,
             &QPushButton::clicked,
             this,
             &EditorWindow::enableDrawing);
 
-    // When the red value changes, change the current color's red value
+    // Connect red spinbox changes to update the current color's red component
     connect(ui->redSpinBox,
             &QSpinBox::valueChanged,
             this,
             &EditorWindow::redChanged);
 
-    // When the blue value changes, change the current color's blue value
+    // Connect blue spinbox changes to update the current color's blue component
     connect(ui->blueSpinBox,
             &QSpinBox::valueChanged,
             this,
             &EditorWindow::blueChanged);
 
-    // When the green value changes, change the current color's green value
+    // Connect green spinbox changes to update the current color's green component
     connect(ui->greenSpinBox,
             &QSpinBox::valueChanged,
             this,
             &EditorWindow::greenChanged);
 
-    // When the alpha value changes, change the current color's alpha value
+    // Connect alpha spinbox changes to update the current color's transparency
     connect(ui->alphaSpinBox,
             &QSpinBox::valueChanged,
             this,
             &EditorWindow::alphaChanged);
 
-    // Emits a signal that changes the value of the redSpinBox
+    // Connect color picker mode to update red spinbox value
     connect(this,
             &EditorWindow::changeRedValue,
             ui->redSpinBox,
             &QSpinBox::setValue);
 
-    // Emits a signal that changes the value of the greenSpinBox
+    // Connect color picker mode to update green spinbox value
     connect(this,
             &EditorWindow::changeGreenValue,
             ui->greenSpinBox,
             &QSpinBox::setValue);
 
-    // Emits a signal that changes the value of the blueSpinBox
+    // Connect color picker mode to update blue spinbox value
     connect(this,
             &EditorWindow::changeBlueValue,
             ui->blueSpinBox,
             &QSpinBox::setValue);
 
-    // Emits a signal that changes the value of the alphaSpinBox
+    // Connect color picker mode to update alpha spinbox value
     connect(this,
             &EditorWindow::changeAlphaValue,
             ui->alphaSpinBox,
             &QSpinBox::setValue);
 
-    //////////////////////////////////////////////////
-    ////////   UI -> FRAMEMANAGER CONNECTIONS   //////
-    /////////////////////////////////////////////////
-
-    // When EditorWindow starts, add one frame to match the canvas
+    // Connect startup signal to add one blank frame to match canvas
     connect(this,
             &EditorWindow::addOneFrame,
             frameManager,
             &FrameManager::addFrame);
 
-    // When addFrameButton clicked, add new frame to frameManager
+    // Connect "Add Frame" button to appending a blank frame to the stack
     connect(ui->addFrameButton,
             &QPushButton::clicked,
             frameManager,
             &FrameManager::addFrame);
 
-    // When frameAdded to frameManager, addFrameToStack in editorWindow
+    // Connect frame added signal to update frame stack UI
     connect(frameManager,
             &FrameManager::frameAdded,
             this,
             &EditorWindow::addFrameToStack);
 
-    // When deleteFrameButton clicked, deleteFrameFromStack in editorWindow
+    // Connect "Delete Frame" button to delete the selected frame from UI
     connect(ui->deleteFrameButton,
             &QPushButton::clicked,
             this,
             &EditorWindow::deleteFrameFromStack);
 
-    // When deleteFrame emits, deleteFrame in frameManager
+    // Connect delete frame signal to frame manager to delete model data
     connect(this,
             &EditorWindow::deleteFrame,
             frameManager,
             &FrameManager::deleteFrame);
 
-    // When updatePixelInFrame emits, updateFrame in frameManager
+    // Connect pixel update signal to update the selected frame in the model
     connect(this,
             &EditorWindow::updatePixelInFrame,
             frameManager,
             &FrameManager::updateFrame);
 
-    // When itemSelectionChanged in frameStackWidget, getSelectedFrame from editorWindow
+    // Connect frame selection change to reloading that frame on the canvas
     connect(ui->frameStackWidget,
             &QListWidget::itemSelectionChanged,
             this,
             &EditorWindow::getSelectedFrame);
 
-    // When getPixels emits, getPixelsForFrame for frameManager
+    // Connect frame pixel request to load pixels from the frame manager
     connect(this,
             &EditorWindow::getPixels,
             frameManager,
             &FrameManager::getPixelsForFrame);
 
-    // When frameManager foundFrame, switchCanvas in editorWindow
+    // Connect pixels loaded signal to repaint the canvas
     connect(frameManager,
             &FrameManager::foundFrame,
             this,
             &EditorWindow::switchCanvas);
 
-    // When duplicateFrameButton clicked, getSelectedFrameToCopy from editorWindow
+    // Connect "Duplicate Frame" button to emit copy request
     connect(ui->duplicateFrameButton,
             &QPushButton::clicked,
             this,
             &EditorWindow::getSelectedFrameToCopy);
 
-    // When selectedFrameToCopy emits, copyFrame in frameManager
+    // Connect copy request signal to frame manager's copy function
     connect(this,
             &EditorWindow::selectedFrameToCopy,
             frameManager,
             &FrameManager::copyFrame);
 
-    // When rotateButton is clicked, get the frame to rotate
+    // Connect "Rotate" button to emit rotation request for selected frame
     connect(ui->rotateButton,
             &QPushButton::clicked,
             this,
             &EditorWindow::getSelectedFrameToRotate);
 
-    // Pass the frame to model to rotate it
+    // Connect rotation signal to rotate the specified frame in model
     connect(this,
             &EditorWindow::selectedFrameToRotate,
             frameManager,
             &FrameManager::rotate90Clockwise);
 
-    //////////////////////////////////////////////////
-    /////   UI -> SAVELOADMANAGER CONNECTIONS   /////
-    /////////////////////////////////////////////////
-
-    // When saveButton clicked,
+    // Connect "Save" button to trigger file save dialog and operation
     connect(ui->saveButton,
             &QPushButton::clicked,
             this,
@@ -212,16 +213,15 @@ EditorWindow::EditorWindow(SaveLoadManager* saveLoadManager, FrameManager* frame
 
 }
 
-// Destructor
 EditorWindow::~EditorWindow() {
     delete ui;
 }
 
-// Slot - UI
 void EditorWindow::invertColor() {
     int frameIndex = getCurrentFrameIndex();
-    for(int y = 0; y < spriteHeight; ++y){
-        for(int x = 0; x < spriteWidth; ++x){
+
+    for (int y = 0; y < spriteHeight; ++y) {
+        for (int x = 0; x < spriteWidth; ++x) {
             QColor original = sprite.pixelColor(x, y);
             QColor inverted(
                 255 - original.red(),
@@ -229,7 +229,6 @@ void EditorWindow::invertColor() {
                 255 - original.blue(),
                 original.alpha()
             );
-
             sprite.setPixelColor(x, y, inverted);
             emit updatePixelInFrame(frameIndex, y, x, inverted.red(), inverted.green(), inverted.blue(), inverted.alpha());
         }
@@ -237,67 +236,53 @@ void EditorWindow::invertColor() {
     updateCanvas();
 }
 
-// Slot - UI
 void EditorWindow::redChanged(int value) {
     color.setRed(value);
     ui->colorPreview->setStyleSheet("QLabel { background-color: " + color.name(QColor::HexArgb) + "; }");
 }
 
-// Slot - UI
 void EditorWindow::blueChanged(int value) {
     color.setBlue(value);
     ui->colorPreview->setStyleSheet("QLabel { background-color: " + color.name(QColor::HexArgb) + "; }");
 }
 
-// Slot - UI
 void EditorWindow::greenChanged(int value) {
     color.setGreen(value);
     ui->colorPreview->setStyleSheet("QLabel { background-color: " + color.name(QColor::HexArgb) + "; }");
 }
 
-// Slot - UI
 void EditorWindow::alphaChanged(int value) {
     color.setAlpha(value);
     ui->colorPreview->setStyleSheet("QLabel { background-color: " + color.name(QColor::HexArgb) + "; }");
 }
 
-// Slot - UI
 void EditorWindow::enableDrawing() {
     isDrawing = true;
     isErasing = false;
     isGettingColor = false;
 }
 
-// Slot - UI
 void EditorWindow::enableEraser() {
     isErasing = true;
     isDrawing = false;
     isGettingColor = false;
 }
 
-// Slot - UI
 void EditorWindow::enableCopyColor() {
     isGettingColor = true;
     isDrawing = false;
     isErasing = false;
 }
 
-// Slot - UI
 void EditorWindow::animateClicked() {
-
-    // Create preview window
-    PreviewWindow *preview = new PreviewWindow(spriteHeight, spriteWidth, frameManager, this);
-
-    // Show preview window
+    PreviewWindow *preview = new PreviewWindow(frameManager, spriteHeight, spriteWidth, this);
     preview->show();
 }
 
-// Slot - UI
 void EditorWindow::addFrameToStack(int frameNumber) {
     ui->frameStackWidget->addItem("Frame" + QString::number(frameNumber));
 }
 
-// Slot - UI
 void EditorWindow::deleteFrameFromStack() {
     QListWidgetItem *selectedItem = ui->frameStackWidget->currentItem();
 
@@ -319,8 +304,7 @@ void EditorWindow::deleteFrameFromStack() {
     }
 }
 
-// Slot - UI
-void EditorWindow::switchCanvas(std::vector<std::vector<QColor>> pixels) {
+void EditorWindow::switchCanvas(vector<vector<QColor>> pixels) {
 
     // Dimensions of the QLabel display area
     int labelWidth = ui->spriteLabel->width();
@@ -346,11 +330,9 @@ void EditorWindow::switchCanvas(std::vector<std::vector<QColor>> pixels) {
     canvas.fill(QColor(100, 100, 100, 50));
 
     QPainter painter(&canvas);
-
     QColor savedColor = color;
 
     for (int y = 0; y < spriteHeight; ++y) {
-
         for (int x = 0; x < spriteWidth; ++x) {
             color = pixels.at(y).at(x);
             sprite.setPixelColor(x, y, color);
@@ -361,27 +343,17 @@ void EditorWindow::switchCanvas(std::vector<std::vector<QColor>> pixels) {
 
     // Draw each pixel from the logical sprite onto the canvas
     for (int y = 0; y < spriteHeight; ++y) {
-
         for (int x = 0; x < spriteWidth; ++x) {
-
-            // Get color at (x, y)
             QColor color = sprite.pixelColor(x, y);
             QRect rect(offsetX + x * pixelSize, offsetY + y * pixelSize, pixelSize, pixelSize);
-
-            // Fill pixel
             painter.fillRect(rect, color);
-
-            // Draw grid
             painter.setPen(Qt::gray);
             painter.drawRect(rect);
         }
     }
-
-    // Update the QLabel with the new canvas image
     ui->spriteLabel->setPixmap(canvas);
 }
 
-// Slot - UI
 void EditorWindow::getSelectedFrame() {
     QListWidgetItem *selectedItem = ui->frameStackWidget->currentItem();
 
@@ -391,7 +363,6 @@ void EditorWindow::getSelectedFrame() {
     }
 }
 
-// Slot - UI
 void EditorWindow::getSelectedFrameToCopy() {
     QListWidgetItem *selectedItem = ui->frameStackWidget->currentItem();
 
@@ -401,7 +372,6 @@ void EditorWindow::getSelectedFrameToCopy() {
     }
 }
 
-// Slot - UI
 void EditorWindow::getSelectedFrameToRotate() {
     QListWidgetItem *selectedItem = ui->frameStackWidget->currentItem();
     int frameIndex;
@@ -417,17 +387,14 @@ void EditorWindow::getSelectedFrameToRotate() {
     emit selectedFrameToRotate(frameIndex);
 }
 
-// Method - Setter
 void EditorWindow::setSpriteWidth(int width) {
     spriteWidth = width;
 }
 
-// Method - Setter
 void EditorWindow::setSpriteHeight(int height) {
     spriteHeight = height;
 }
 
-// Method -
 void EditorWindow::initializeFromLoadedFile(int width, int height) {
     spriteWidth = width;
     spriteHeight = height;
@@ -438,6 +405,7 @@ void EditorWindow::initializeFromLoadedFile(int width, int height) {
 
     // Populate frame list in UI
     ui->frameStackWidget->clear();
+
     for (size_t i = 0; i < frameManager->frames.size(); ++i) {
         addFrameToStack(i + 1);
     }
@@ -447,8 +415,6 @@ void EditorWindow::initializeFromLoadedFile(int width, int height) {
     emit getPixels(0); // causes switchCanvas to be called
 }
 
-// Method - Used to reinitialize editorwindow size
-// Called in mainwindow before opening the editorwindow
 void EditorWindow::reinitializeEditor(int newWidth, int newHeight) {
     spriteWidth = newWidth;
     spriteHeight = newHeight;
@@ -462,11 +428,9 @@ void EditorWindow::reinitializeEditor(int newWidth, int newHeight) {
     frameManager->width = newWidth;
     emit addOneFrame(); // Add 1 new blank frame
 
-    updateCanvas(); // Redraw canvas
+    updateCanvas();
 }
 
-// Method - Redraws the canvas (spriteLabel) to reflect the current state of the sprite image.
-// This ensures that any changes to pixel colors are visually updated on the screen.
 void EditorWindow::updateCanvas() {
 
     // Dimensions of the QLabel display area
@@ -491,34 +455,22 @@ void EditorWindow::updateCanvas() {
 
     // Set background color to dark gray
     canvas.fill(QColor(100, 100, 100, 50));
-
     QPainter painter(&canvas);
 
     // Draw each pixel from the logical sprite onto the canvas
     for (int y = 0; y < spriteHeight; ++y) {
-
         for (int x = 0; x < spriteWidth; ++x) {
-
-            // Get color at (x, y)
             QColor color = sprite.pixelColor(x, y);
             QRect rect(offsetX + x * pixelSize, offsetY + y * pixelSize, pixelSize, pixelSize);
-
-            // Fill pixel
             painter.fillRect(rect, color);
-
-            // Draw grid
             painter.setPen(Qt::gray);
             painter.drawRect(rect);
         }
-
     }
 
-    // Update the QLabel with the new canvas image
     ui->spriteLabel->setPixmap(canvas);
 }
 
-// Method - Filters events on the spriteLabel to handle mouse-based drawing, erasing, and color picking.
-// Supports both click and drag interactions for intuitive user control.
 bool EditorWindow::eventFilter(QObject *watched, QEvent *event) {
 
     // Only handle events for the spriteLabel (the drawing area)// Only handle events for the spriteLabel (the drawing area)
@@ -558,15 +510,9 @@ bool EditorWindow::eventFilter(QObject *watched, QEvent *event) {
 
             // Only process if (x, y) is within bounds
             if (x >= 0 && x < spriteWidth && y >= 0 && y < spriteHeight) {
-
-                // Perform drawing/erasing/color-picking
                 handleDrawingAction(x, y);
-
-                // Redraw the canvas
                 updateCanvas();
             }
-
-            // Event handled
             return true;
         }
 
@@ -578,25 +524,15 @@ bool EditorWindow::eventFilter(QObject *watched, QEvent *event) {
 
             // Only process if (x, y) is within bounds
             if (x >= 0 && x < spriteWidth && y >= 0 && y < spriteHeight) {
-
-                // Continue drawing
                 handleDrawingAction(x, y);
-
-                // Redraw canvas
                 updateCanvas();
             }
-
-            // Event handled
             return true;
         }
 
         // Handle mouse release (end drawing or dragging)
         else if (event->type() == QEvent::MouseButtonRelease) {
-
-            // Stop tracking mouse drag
             mousePressed = false;
-
-            // Event handled
             return true;
         }
     }
@@ -605,8 +541,6 @@ bool EditorWindow::eventFilter(QObject *watched, QEvent *event) {
     return QMainWindow::eventFilter(watched, event);
 }
 
-// Method - Handles drawing, erasing, or color picking on the canvas based on the current mode.
-// Called from mouse event handlers when the user interacts with the sprite grid.
 void EditorWindow::handleDrawingAction(int x, int y) {
 
     // If drawing mode is active
@@ -615,10 +549,7 @@ void EditorWindow::handleDrawingAction(int x, int y) {
         // Set the pixel at (x, y) to the current selected color
         sprite.setPixelColor(x, y, color);
 
-        // Get the current frame index selected in the frame stack
         int frameIndex = getCurrentFrameIndex();
-
-        // Notify the frame manager to update the pixel in the current frame
         emit updatePixelInFrame(frameIndex, y, x, color.red(), color.green(), color.blue(), color.alpha());
     }
 
@@ -628,20 +559,13 @@ void EditorWindow::handleDrawingAction(int x, int y) {
         // Set the pixel at (x, y) to a fully transparent color (erased)
         sprite.setPixelColor(x, y, QColor(255, 255, 255, 0));
 
-        // Get the current frame index selected in the frame stack
         int frameIndex = getCurrentFrameIndex();
-
-        // Notify the frame manager to update the pixel in the current frame as erased
         emit updatePixelInFrame(frameIndex, y, x, 255, 255, 255, 0);
     }
 
     // If color picker mode is active
     else if (isGettingColor) {
-
-        // Get the color at (x, y) from the sprite
         color = sprite.pixelColor(x, y);
-
-        // Update the spin boxes and color preview UI with the selected color values
         emit changeRedValue(color.red());
         emit changeGreenValue(color.green());
         emit changeBlueValue(color.blue());
@@ -649,11 +573,7 @@ void EditorWindow::handleDrawingAction(int x, int y) {
     }
 }
 
-// Helper Method - Retrieves the index of the currently selected frame in the frame stack.
-// Returns 0 if no frame is selected (default to the first frame).
 int EditorWindow::getCurrentFrameIndex() {
-
-    // Get the currently selected item in the frameStackWidget (the list of frames)
     QListWidgetItem *selectedItem = ui->frameStackWidget->currentItem();
 
     // If an item is selected, return its index (row number) in the list.
@@ -661,11 +581,8 @@ int EditorWindow::getCurrentFrameIndex() {
     return selectedItem ? ui->frameStackWidget->row(selectedItem) : 0;
 }
 
-// Slot - Triggered when the Save button is clicked in the EditorWindow
 void EditorWindow::onSaveButtonClicked() {
 
-    // Open a file save dialog and let the user pick a path to save the JSON file.
-    // The dialog title is "Save Sprite File", and it filters for .json files.
     QString filePath = QFileDialog::getSaveFileName(
         this,                           // Parent widget (EditorWindow)
         "Save Sprite File",             // Title of the dialog
@@ -683,7 +600,6 @@ void EditorWindow::onSaveButtonClicked() {
 
         bool success = saveLoadManager->saveToFile(*frameManager, filePath);
 
-        // If the save was successful, show a success message
         if (success) {
             QMessageBox::information(
                 this,                       // Parent widget
@@ -692,7 +608,6 @@ void EditorWindow::onSaveButtonClicked() {
                 );
         }
 
-        // If the save failed, show an error message
         else {
             QMessageBox::warning(
                 this,                       // Parent widget

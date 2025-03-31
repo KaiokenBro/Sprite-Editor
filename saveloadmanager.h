@@ -3,12 +3,9 @@
 
 /**
  * @file saveloadmanager.cpp
- * @authors Victor Valdez Landa, Harrison Dopplet
- *
- * @brief This file defines the implementation of the of svaing and loading the images of sprites from the Sprite Editor
- *
- * Checked by Victor Valdez Landa
- * @date 03/30/2025
+ * @authors Victor Valdez Landa
+ * @brief Declaration of the SaveLoadManager class used for saving and loading sprite data in the Sprite Editor.
+ * @date 03/31/2025
  */
 
 #include "framemanager.h"
@@ -16,31 +13,38 @@
 #include <QObject>
 #include <QWidget>
 
+/**
+ * @class SaveLoadManager
+ *
+ * @brief Handles serialization and deserialization of sprite data from the FrameManager to and from .ssp files.
+ *
+ * This class is responsible for converting the internal frame data into a JSON-based format
+ * and writing it to disk, or for reading JSON sprite data from a file and updating the frame manager accordingly.
+ */
 class SaveLoadManager : public QObject {
     Q_OBJECT
 
 public:
 
     /**
-     * @brief SaveLoadManager - Constructor for SaveLoadManager to be used in save/load purposes in the UI.
-     * @param parent - QObject necessity for the use of objects for Qt.
+     * @brief Constructs a SaveLoadManager instance.
+     * @param parent Optional parent QObject.
      */
     explicit SaveLoadManager(QObject *parent = nullptr);
 
     /**
-     * @brief saveToFile - Method to save the data that FrameManger has on the sprite editor,
-     * compresses it into a Json Structure .ssp file.
-     * @param manager - The FrameManager that holds the sprite data
-     * @param filePath - the name of the file to be created
-     * @return - returns true if the file was succesflly saved, false otherwise.
+     * @brief Saves all frames managed by the given FrameManager to a JSON-based .ssp file.
+     * @param manager Reference to the FrameManager containing all frame data to save.
+     * @param filePath The target file path where the .ssp file will be written.
+     * @return true if the file was saved successfully; false otherwise.
      */
     bool saveToFile(FrameManager& manager, QString filePath);
 
     /**
-     * @brief loadFromFile - Deserializes a file to load in the data to the sprite editor's data of pixels.
-     * @param manager - The FrameManager that holds the sprite data
-     * @param filePath - The name of the file to be loaded
-     * @return - returns true if the file was loaded in sucessfully, false otherwise.
+     * @brief Loads sprite data from a JSON-based .ssp file and populates the given FrameManager.
+     * @param manager Reference to the FrameManager where loaded frames will be stored.
+     * @param filePath Path to the .ssp file to load.
+     * @return true if the file was loaded successfully; false otherwise.
      */
     bool loadFromFile(FrameManager& manager, QString filePath);
 
