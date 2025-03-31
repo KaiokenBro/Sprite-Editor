@@ -28,11 +28,6 @@ public:
     explicit SaveLoadManager(QObject *parent = nullptr);
 
     /**
-     * @brief Destructor for the SaveLoadManager Class.
-     */
-    ~SaveLoadManager();
-
-    /**
      * @brief saveToFile - Method to save the data that FrameManger has on the sprite editor,
      * compresses it into a Json Structure .ssp file.
      * @param manager - The FrameManager that holds the sprite data

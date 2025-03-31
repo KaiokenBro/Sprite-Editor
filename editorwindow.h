@@ -27,7 +27,6 @@ public:
     void setSpriteHeight(int height);
 
     void reinitializeEditor(int newWidth, int newHeight);
-    void selectFirstFrame();
     void initializeFromLoadedFile(int width, int height);
 
 private:

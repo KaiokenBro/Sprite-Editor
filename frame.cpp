@@ -10,13 +10,7 @@ Frame::Frame(int height, int width) : height(height), width(width) {
         std::vector<QColor> pixelsRow;
 
         for(int j = 0; j < width; j++) {
-            QColor newPixel;
-
-            // New pixels must be white and transparent.
-            newPixel.setRed(255);
-            newPixel.setBlue(255);
-            newPixel.setGreen(255);
-            newPixel.setAlpha(0);
+            QColor newPixel(255, 255, 255, 0);
             pixelsRow.push_back(newPixel);
         }
         pixels.push_back(pixelsRow);

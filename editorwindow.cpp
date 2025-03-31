@@ -417,14 +417,6 @@ void EditorWindow::getSelectedFrameToRotate() {
     emit selectedFrameToRotate(frameIndex);
 }
 
-// Method -
-void EditorWindow::selectFirstFrame() {
-    if (ui->frameStackWidget->count() > 0) {
-        ui->frameStackWidget->setCurrentRow(0);
-        emit getPixels(0);
-    }
-}
-
 // Method - Setter
 void EditorWindow::setSpriteWidth(int width) {
     spriteWidth = width;
@@ -464,9 +456,6 @@ void EditorWindow::reinitializeEditor(int newWidth, int newHeight) {
     // Resize sprite image
     sprite = QImage(spriteWidth, spriteHeight, QImage::Format_ARGB32);
     sprite.fill(QColor(255, 255, 255, 0));
-
-    // Clear frames and start fresh
-    frameManager->frames.clear();
 
     frameManager->frames.clear();
     frameManager->height = newHeight;

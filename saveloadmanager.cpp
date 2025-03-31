@@ -22,11 +22,6 @@ SaveLoadManager::SaveLoadManager(QObject *parent)
     : QObject{parent}
 {}
 
-//Destructor
-SaveLoadManager::~SaveLoadManager(){
-
-}
-
 // Method - Serialize (Object -> File)
 // Saves all frames managed by FrameManager to a JSON file at the given file path.
 bool SaveLoadManager::saveToFile(FrameManager& manager, QString filePath) {
