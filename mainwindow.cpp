@@ -25,9 +25,6 @@ MainWindow::MainWindow(SaveLoadManager* saveLoadManager, FrameManager* frameMana
     ui->widthLineEdit->setValidator(validator);
     ui->heightLineEdit->setValidator(validator);
 
-    // Initially hide createFileBox
-    ui->createFileBox->setVisible(false);
-
     // Initially disable setSizeButton
     ui->setSizeButton->setEnabled(false);
 
@@ -37,33 +34,11 @@ MainWindow::MainWindow(SaveLoadManager* saveLoadManager, FrameManager* frameMana
     // Initially disable the openButton
     ui->openButton->setEnabled(false);
 
-    //////////////////////////////////////////////////
-    ////////   UI -> UI CONNECTIONS        //////////
-    /////////////////////////////////////////////////
-
-    // When newButton is clicked, hide welcomeLabel
-    connect(ui->newButton,
-            &QPushButton::clicked,
-            this,
-            &MainWindow::hideWelcomeLabel);
-
-    // When loadButton is clicked, hide welcomeLabel
-    connect(ui->loadButton,
-            &QPushButton::clicked,
-            this,
-            &MainWindow::hideWelcomeLabel);
-
-    // When newButton is clicked, display createFileBox
-    connect(ui->newButton,
-            &QPushButton::clicked,
-            this,
-            &MainWindow::displayCreateFileBox);
-
-    // When loadButton is clicked, hide createFileBox
-    connect(ui->loadButton,
-            &QPushButton::clicked,
-            this,
-            &MainWindow::hideCreateFileBox);
+    ui->createFileBox->setStyleSheet(
+        "QGroupBox {"
+        "  border: 2px solid black;"
+        "}"
+        );
 
     // When widthLineEdit is changed, check to enable setSizeButton
     connect(ui->widthLineEdit,
@@ -82,24 +57,6 @@ MainWindow::MainWindow(SaveLoadManager* saveLoadManager, FrameManager* frameMana
             &QPushButton::clicked,
             this,
             &MainWindow::onSetSizeButtonClicked);
-
-    // When newButton is clicked, disable newButton
-    connect(ui->newButton,
-            &QPushButton::clicked,
-            this,
-            &MainWindow::disableNewButton);
-
-    // When newButton is clicked, enable loadButton
-    connect(ui->newButton,
-            &QPushButton::clicked,
-            this,
-            &MainWindow::enableLoadButton);
-
-    // When loadButton is clicked, enable newButton
-    connect(ui->loadButton,
-            &QPushButton::clicked,
-            this,
-            &MainWindow::enableNewButton);
 
     // When createButton is clicked, openEditorWindow
     connect(ui->createButton,
@@ -131,40 +88,23 @@ MainWindow::MainWindow(SaveLoadManager* saveLoadManager, FrameManager* frameMana
             this,
             &MainWindow::syncWidthToHeight);
 
-    //////////////////////////////////////////////////
-    ////////  UI -> SAVELOADMANAGER CONNECTIONS //////
-    /////////////////////////////////////////////////
+    //
+    connect(ui->widthLineEdit,
+            &QLineEdit::textChanged,
+            this,
+            &MainWindow::invalidateSizeConfirmation);
+
+    //
+    connect(ui->heightLineEdit,
+            &QLineEdit::textChanged,
+            this,
+            &MainWindow::invalidateSizeConfirmation);
 
 }
 
 // Destructor
 MainWindow::~MainWindow() {
     delete ui;
-}
-
-// Slot - UI
-void MainWindow::hideWelcomeLabel() {
-    ui->welcomeLabel->setVisible(false);
-}
-
-// Slot - UI
-void MainWindow::displayCreateFileBox() {
-    ui->createFileBox->setVisible(true);
-}
-
-// Slot - UI
-void MainWindow::hideCreateFileBox() {
-    ui->createFileBox->setVisible(false);
-}
-
-// Slot - UI
-void MainWindow::disableNewButton() {
-    ui->newButton->setEnabled(false);
-}
-
-// Slot - UI
-void MainWindow::enableNewButton() {
-    ui->newButton->setEnabled(true);
 }
 
 // Slot - UI
@@ -175,6 +115,13 @@ void MainWindow::disableLoadButton() {
 // Slot - UI
 void MainWindow::enableLoadButton() {
     ui->loadButton->setEnabled(true);
+}
+
+// Slot - UI
+void MainWindow::invalidateSizeConfirmation() {
+    ui->statusLabel->setText("❌");
+    ui->statusLabel->setStyleSheet("color: red; font-size: 18px;");
+    ui->createButton->setEnabled(false);
 }
 
 // Slot - UI

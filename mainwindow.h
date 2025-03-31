@@ -26,13 +26,8 @@ private:
 
 public slots:
 
-    void hideWelcomeLabel();
-    void displayCreateFileBox();
-    void hideCreateFileBox();
     void validateInputs();
     void onSetSizeButtonClicked();
-    void disableNewButton();
-    void enableNewButton();
     void disableLoadButton();
     void enableLoadButton();
     void openEditorWindowNew();
@@ -40,6 +35,7 @@ public slots:
     void loadFile();
     void syncHeightToWidth(const QString &text);
     void syncWidthToHeight(const QString &text);
+    void invalidateSizeConfirmation();
 
 signals:
 

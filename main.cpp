@@ -2,27 +2,30 @@
  * @file main.cpp
  *
  * Team Members:
- * - Victor Valdez Landa (READY)
- * - Harrison Doppelt (READY)
- * - Charlie Jones (READY)
- * - Sam Garcia (READY)
+ * - Victor Valdez Landa
+ * - Harrison Doppelt
+ * - Charlie Jones
+ * - Sam Garcia
  * - Richard Nghiem
- * - Nicholas Cicalese (READY)
+ * - Nicholas Cicalese
  *
  * GitHub Usernames:
  * - KaiokenBro
  * - hdoppelt
  * - charlesj24240
  * - ncicalese
- * -
+ * - SamuelFGarcia4
+ * - Urichng
  *
  * Repository:
  * - https://github.com/UofU-CS3505/cs3505-assignment8-KaiokenBro
  *
- * Creative Element:
- * -
+ * Additional Features:
+ * - Invert Colors
+ * - Rotate Sprite
+ * - Copy Pixel Color
  *
- * @date 03/23/2025
+ * @date 03/31/2025
  */
 
 #include "mainwindow.h"
@@ -30,10 +33,8 @@
 #include <QApplication>
 
 int main(int argc, char *argv[]) {
-
     QApplication a(argc, argv);
     QApplication::setStyle("Fusion");
-
     SaveLoadManager saveLoadManager;
 
     // Placeholder, updated later based on user input
@@ -43,7 +44,6 @@ int main(int argc, char *argv[]) {
     FrameManager frameManager(initialHeight, initialWidth);
     EditorWindow editorWindow(&saveLoadManager, &frameManager, initialWidth, initialHeight);
     MainWindow mainWindow(&saveLoadManager, &frameManager, &editorWindow);
-
     editorWindow.hide();
     mainWindow.show();
     return a.exec();
