@@ -32,17 +32,13 @@ PreviewWindow::~PreviewWindow() {
 
 void PreviewWindow::animation() {
     bool animateBool = ui->animateButton->isChecked();
-    animate(animateBool);
-}
-
-void PreviewWindow::animate(bool animationBool) {
     std::vector<Frame> frames = emit getFrames();
 
-    while (animationBool && this->isVisible()) {
+    while (animateBool && this->isVisible()) {
         for (const Frame& frame : frames) {
             showFrame(frame);
         }
-        animationBool = ui->animateButton->isChecked();
+        animateBool = ui->animateButton->isChecked();
     }
 }
 
@@ -105,6 +101,8 @@ void PreviewWindow::showFrame(Frame frame) {
 
     // Update the QLabel with the new canvas image
     ui->spriteLabel->setPixmap(canvas);
+
+    // Timer to wait 1/FPS seconds before drawing next image
     QEventLoop loop;
     QTimer timer;
     QObject::connect(&timer, &QTimer::timeout, &loop, &QEventLoop::quit);

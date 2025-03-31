@@ -24,12 +24,24 @@ class PreviewWindow : public QMainWindow {
 
 public:
 
+    /**
+     * @brief PreviewWindow - Constructor.
+     * @param spriteHeight - the actual height of the sprite in pixels.
+     * @param spriteWidth - the actual width of teh sprite in pixels.
+     * @param frameManager - the pointer to the framemanager class to set up signals.
+     * @param parent - QObject needed for the use of objects in qt.
+     */
+
     explicit PreviewWindow(int spriteHeight, int spriteWidth, FrameManager *frameManager, QWidget *parent = nullptr);
 
+    /**
+     * @brief Destructor for the PreveiwWindow.
+     */
     ~PreviewWindow();
 
 private:
 
+    //The preview window ui pointer
     Ui::previewwindow *ui;
 
     //Actual height of the sprite
@@ -43,26 +55,22 @@ private:
 
 public slots:
 
-    /*
-     * Toggles the animation on to be looped through until it is stopped
+    /**
+     * @brief Toggles the animation on to be looped through until it is stopped.
      */
     void animation();
 
-    /*
-     * Shows the frame in the preview window
-     * @param frame: the Frame to be displayed
+    /**
+     * @brief Shows the frame in the preview window.
+     * @param frame - the Frame to be displayed.
      */
     void showFrame(Frame);
 
-    /*
-     * Loops through the frames and displays them in order until the button is clicked again stopping it.
-     * @param animationBool: used to see if the animation cycle should keep running or not.
-     */
-    void animate(bool);
 
 signals:
-    /*
-     * Signal sent to the frame manager to get the frames for animation
+
+    /**
+     * @brief Signal sent to the frame manager to get the frames for animation
      */
     std::vector<Frame> getFrames();
 };
