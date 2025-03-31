@@ -3,6 +3,8 @@
  * @author Charlie Jones
  * @brief Implementation of the FrameManager class for managing sprite frames and pixel data.
  * @date 03/31/2025
+ *
+ * Checked by Nicholas Cicalese
  */
 
 #include "framemanager.h"

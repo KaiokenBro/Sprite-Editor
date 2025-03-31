@@ -3,6 +3,8 @@
  * @brief Implementation of the Frame class, which represents a 2D pixel grid used in sprite frames.
  * @author Richard Nghiem
  * @date 03/31/2025
+ *
+ * Checked by Harrison Doppelt
  */
 
 #include "frame.h"

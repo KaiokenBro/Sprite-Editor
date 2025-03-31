@@ -12,6 +12,8 @@
  * and actual pixel size.
  *
  * @date 03/31/2025
+ *
+ * Checked by Charlie Jones
  */
 
 #include "frame.h"

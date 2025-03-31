@@ -3,7 +3,7 @@
 
 /**
  * @file mainwindow.h
- * @author Harrison Doppelt
+ * @author Harrison Doppelt, Victor Valdez Landa
  *
  * @brief Declares the MainWindow class, which provides the initial UI for creating or loading sprite files.
  *
@@ -11,6 +11,8 @@
  * from a `.ssp` file. It serves as the entry point before the EditorWindow is launched.
  *
  * @date 03/31/2025
+ *
+ * Checked by Richard Nghiem
  */
 
 #include "editorwindow.h"

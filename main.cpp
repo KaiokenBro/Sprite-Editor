@@ -28,6 +28,8 @@
  * - Copy Pixel Color
  *
  * @date 03/31/2025
+ *
+ * Checked by Harrison Doppelt
  */
 
 #include "mainwindow.h"

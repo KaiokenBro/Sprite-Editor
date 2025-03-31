@@ -11,6 +11,8 @@
  * Frames are used to store and manipulate individual layers of animation or static sprite images.
  *
  * @date 03/31/2025
+ *
+ * Checked by Harrison Doppelt
  */
 
 #include <QColor>

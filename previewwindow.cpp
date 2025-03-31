@@ -6,6 +6,8 @@
  * of sprite frames at user-defined speed and resolution.
  *
  * @date 03/31/2025
+ *
+ * Checked by Charlie Jones
  */
 
 #include "previewwindow.h"

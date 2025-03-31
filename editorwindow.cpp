@@ -1,6 +1,6 @@
 /**
  * @file editorwindow.cpp
- * @author Harrison Doppelt
+ * @author Harrison Doppelt, Samuel Garcia, Nicholas Cicalese, Charlie Jones, Victor Valdez Landa, Richard Nghiem
  *
  * @brief This file contains the implementation of the EditorWindow class,
  * which provides the main interface for drawing, editing, saving, and managing
@@ -11,6 +11,8 @@
  * FrameManager and SaveLoadManager to persist sprite state.
  *
  * @date 03/31/2025
+ *
+ * Checked by Victor Valdez Landa
  */
 
 #include "editorwindow.h"

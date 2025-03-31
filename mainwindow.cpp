@@ -1,12 +1,14 @@
 /**
  * @file mainwindow.cpp
- * @author Harrison Doppelt
+ * @author Harrison Doppelt, Victor Valdez Landa
  *
  * @brief Implementation of the MainWindow class — the entry UI for creating or loading sprites.
  *
  * Provides logic for input validation, file loading, and transition to the EditorWindow.
  *
  * @date 03/31/2025
+ *
+ * Checked by Richard Nghiem
  */
 
 #include "mainwindow.h"

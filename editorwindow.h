@@ -3,7 +3,7 @@
 
 /**
  * @file editorwindow.h
- * @author Harrison Doppelt
+ * @author Harrison Doppelt, Samuel Garcia, Nicholas Cicalese, Charlie Jones, Victor Valdez Landa, Richard Nghiem
  *
  * @brief Declares the EditorWindow class for the main sprite editing interface.
  *
@@ -12,6 +12,8 @@
  * real-time user interactions like mouse drawing, erasing, and color picking.
  *
  * @date 03/31/2025
+ *
+ * Checked by Victor Valdez Landa
  */
 
 #include "framemanager.h"
