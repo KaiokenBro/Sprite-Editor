@@ -1,5 +1,3 @@
-//
-
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
@@ -22,15 +20,9 @@ public:
 private:
 
     Ui::MainWindow *ui;
-
-    // Pointer to EditorWindow
     EditorWindow* editorWindow;
-
-    // Pointer to FrameManager
     FrameManager* frameManager;
-
-    // Pointer to SaveLoadManager
-    //SaveLoadManager* saveLoadManager;
+    SaveLoadManager* saveLoadManager;
 
 public slots:
 
@@ -43,7 +35,8 @@ public slots:
     void enableNewButton();
     void disableLoadButton();
     void enableLoadButton();
-    void openEditorWindow();
+    void openEditorWindowNew();
+    void openEditorWindowLoad();
     void loadFile();
     void syncHeightToWidth(const QString &text);
     void syncWidthToHeight(const QString &text);

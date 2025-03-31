@@ -1,5 +1,3 @@
-//
-
 #include "editorwindow.h"
 #include "ui_editorwindow.h"
 #include "previewwindow.h"
@@ -393,18 +391,25 @@ void EditorWindow::getSelectedFrameToCopy() {
 void EditorWindow::getSelectedFrameToRotate() {
     QListWidgetItem *selectedItem = ui->frameStackWidget->currentItem();
     int frameIndex;
+
     if (selectedItem) {
         frameIndex = ui->frameStackWidget->row(selectedItem);
     }
+
     else {
         frameIndex = 0;
     }
+
     emit selectedFrameToRotate(frameIndex);
 }
 
-
-
-
+// Method -
+void EditorWindow::selectFirstFrame() {
+    if (ui->frameStackWidget->count() > 0) {
+        ui->frameStackWidget->setCurrentRow(0);
+        emit getPixels(0);
+    }
+}
 
 // Method - Setter
 void EditorWindow::setSpriteWidth(int width) {
@@ -414,6 +419,26 @@ void EditorWindow::setSpriteWidth(int width) {
 // Method - Setter
 void EditorWindow::setSpriteHeight(int height) {
     spriteHeight = height;
+}
+
+// Method -
+void EditorWindow::initializeFromLoadedFile(int width, int height) {
+    spriteWidth = width;
+    spriteHeight = height;
+
+    // Create and clear canvas image
+    sprite = QImage(spriteWidth, spriteHeight, QImage::Format_ARGB32);
+    sprite.fill(QColor(255, 255, 255, 0));
+
+    // Populate frame list in UI
+    ui->frameStackWidget->clear();
+    for (size_t i = 0; i < frameManager->frames.size(); ++i) {
+        addFrameToStack(i + 1);
+    }
+
+    // Trigger canvas to draw first frame
+    ui->frameStackWidget->setCurrentRow(0);
+    emit getPixels(0); // causes switchCanvas to be called
 }
 
 // Method - Used to reinitialize editorwindow size
@@ -428,10 +453,11 @@ void EditorWindow::reinitializeEditor(int newWidth, int newHeight) {
 
     // Clear frames and start fresh
     frameManager->frames.clear();
+
+    frameManager->frames.clear();
     frameManager->height = newHeight;
     frameManager->width = newWidth;
-
-    emit addOneFrame(); // Adds one fresh frame to match new size
+    emit addOneFrame(); // Add 1 new blank frame
 
     updateCanvas(); // Redraw canvas
 }
@@ -631,18 +657,6 @@ int EditorWindow::getCurrentFrameIndex() {
     // If no item is selected (e.g., at startup), default to frame index 0.
     return selectedItem ? ui->frameStackWidget->row(selectedItem) : 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 // Slot - Triggered when the Save button is clicked in the EditorWindow
 void EditorWindow::onSaveButtonClicked() {

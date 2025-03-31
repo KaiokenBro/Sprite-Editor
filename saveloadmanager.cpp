@@ -65,8 +65,7 @@ bool SaveLoadManager::saveToFile(FrameManager& manager, QString filePath) {
 
         // Create a JSON object to represent the entire frame
         QJsonObject frameObj;
-        frameObj["height"] = frame.getHeight(); // Store frame height
-        frameObj["width"] = frame.getWidth();   // Store frame width
+        frameObj["index"] = static_cast<int>(i);  // Add the frame index
         frameObj["pixels"] = pixelArray;        // Store all pixels in this frame
 
         // Add the frame object to the top-level frames array
@@ -75,6 +74,8 @@ bool SaveLoadManager::saveToFile(FrameManager& manager, QString filePath) {
 
     // Create the root JSON object and assign the frames array to it
     QJsonObject root;
+    root["height"] = manager.frames[0].getHeight();
+    root["width"] = manager.frames[0].getWidth();
     root["frames"] = framesArray;
 
     // Convert the root JSON object into a QJsonDocument
@@ -129,15 +130,18 @@ bool SaveLoadManager::loadFromFile(FrameManager& manager, QString filePath) {
     QJsonObject root = doc.object();
     QJsonArray framesArray = root["frames"].toArray();
 
+    int height = root["height"].toInt();
+    int width = root["width"].toInt();
+
+    manager.frames.clear();
+    manager.height = height;
+    manager.width = width;
+
     // Loop through each frame in the array
     for (const QJsonValue& frameVal : framesArray) {
 
         // Get the frame object
         QJsonObject frameObj = frameVal.toObject();
-
-        // Extract frame dimensions
-        int height = frameObj["height"].toInt();
-        int width = frameObj["width"].toInt();
 
         // Get the array of pixel objects
         QJsonArray pixelArray = frameObj["pixels"].toArray();

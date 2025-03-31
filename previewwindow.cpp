@@ -23,6 +23,7 @@ PreviewWindow::PreviewWindow(int height, int width, FrameManager *frameManager, 
             &PreviewWindow::getFrames,
             frameManager,
             &FrameManager::sendFrames);
+
 }
 
 PreviewWindow::~PreviewWindow() {

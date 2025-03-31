@@ -25,12 +25,6 @@ public:
 
 public slots:
 
-    // /*
-    //  * This method adds an existing frame to the end of the frame manager.
-    //  * @param frameToAdd - The frame to be added to the frame manager.
-    //  */
-    // void addFrame(Frame frameToAdd);
-
     /*
      * This method adds a new frame to the frame manager. The frame is always added to the end.
      * @param frameToAdd - The frame to be added to the frame manager.

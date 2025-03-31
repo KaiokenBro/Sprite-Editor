@@ -25,8 +25,6 @@
  * @date 03/23/2025
  */
 
-//
-
 #include "mainwindow.h"
 
 #include <QApplication>
@@ -38,14 +36,12 @@ int main(int argc, char *argv[]) {
 
     SaveLoadManager saveLoadManager;
 
-    // Placeholder dimensions; will be updated later based on user input
+    // Placeholder, updated later based on user input
     int initialWidth = 1;
     int initialHeight = 1;
+
     FrameManager frameManager(initialHeight, initialWidth);
-
-    // Pass SaveLoadManager and FrameManager to EditorWindow for editing and saving
     EditorWindow editorWindow(&saveLoadManager, &frameManager, initialWidth, initialHeight);
-
     MainWindow mainWindow(&saveLoadManager, &frameManager, &editorWindow);
 
     editorWindow.hide();

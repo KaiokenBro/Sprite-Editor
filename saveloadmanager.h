@@ -25,13 +25,6 @@ public:
     bool saveToFile(FrameManager& manager, QString filePath);
     bool loadFromFile(FrameManager& manager, QString filePath);
 
-private:
-
-
-
-signals:
-
-
 };
 
 #endif // SAVELOADMANAGER_H

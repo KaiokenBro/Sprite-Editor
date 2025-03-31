@@ -1,5 +1,3 @@
-//
-
 #include "mainwindow.h"
 #include "editorwindow.h"
 #include "ui_mainwindow.h"
@@ -18,7 +16,7 @@ MainWindow::MainWindow(SaveLoadManager* saveLoadManager, FrameManager* frameMana
 
     this->editorWindow = editorWindow;
     this->frameManager = frameManager;
-    //this->saveLoadManager = saveLoadManager;
+    this->saveLoadManager = saveLoadManager;
 
     // Create a validator to restrict input to integers between 1 and 64
     QIntValidator *validator = new QIntValidator(1, 64, this);
@@ -107,7 +105,7 @@ MainWindow::MainWindow(SaveLoadManager* saveLoadManager, FrameManager* frameMana
     connect(ui->createButton,
             &QPushButton::clicked,
             this,
-            &MainWindow::openEditorWindow);
+            &MainWindow::openEditorWindowNew);
 
     // When loadButton is clicked, loadFile
     connect(ui->loadButton,
@@ -119,7 +117,7 @@ MainWindow::MainWindow(SaveLoadManager* saveLoadManager, FrameManager* frameMana
     connect(ui->openButton,
             &QPushButton::clicked,
             this,
-            &MainWindow::openEditorWindow);
+            &MainWindow::openEditorWindowLoad);
 
     // When widthLineEdit's value is changed, update heightLineEdit's value to reflect the same
     connect(ui->widthLineEdit,
@@ -228,7 +226,8 @@ void MainWindow::onSetSizeButtonClicked() {
 }
 
 // Slot - Transitions to the editorwindow UI
-void MainWindow::openEditorWindow() {
+// Used for new file
+void MainWindow::openEditorWindowNew() {
 
     int width = ui->widthLineEdit->text().toInt();
     int height = ui->heightLineEdit->text().toInt();
@@ -242,16 +241,35 @@ void MainWindow::openEditorWindow() {
     this->close();
 }
 
+// Slot - Transitions to the editorwindow UI
+// Used for loading file
+void MainWindow::openEditorWindowLoad() {
 
+    // Get file path from the label
+    QString filePath = ui->filePathLabel->text();
 
+    // Attempt to load from the file
+    bool success = saveLoadManager->loadFromFile(*frameManager, filePath);
 
+    // If loading failed, show an error and stop
+    if (!success) {
+        QMessageBox::warning(this, "Error", "Failed to load the file.");
+        return;
+    }
 
+    // Use the first frame's size to reinitialize the editor
+    int newWidth = frameManager->width;
+    int newHeight = frameManager->height;
 
+    // Use new method for initializing loaded data
+    editorWindow->initializeFromLoadedFile(newWidth, newHeight);
 
+    // Show the editor window
+    editorWindow->show();
 
-
-
-
+    // Close the main window
+    this->close();
+}
 
 // Slot - Opens file manager for selecting .ssp files to load
 void MainWindow::loadFile() {

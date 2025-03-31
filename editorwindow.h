@@ -1,5 +1,3 @@
-//
-
 #ifndef EDITORWINDOW_H
 #define EDITORWINDOW_H
 
@@ -29,29 +27,24 @@ public:
     void setSpriteHeight(int height);
 
     void reinitializeEditor(int newWidth, int newHeight);
+    void selectFirstFrame();
+    void initializeFromLoadedFile(int width, int height);
 
 private:
 
     Ui::EditorWindow *ui;
-
     FrameManager *frameManager;
-
     SaveLoadManager* saveLoadManager;
-
     QColor color;
     QImage sprite;
-
     int zoom = 10;
     int spriteWidth;
     int spriteHeight;
-
     bool isDrawing = false;
     bool isErasing = false;
     bool isGettingColor = false;
     bool mousePressed = false;
-
     void updateCanvas();
-
     void handleDrawingAction(int x, int y);
     int getCurrentFrameIndex();
 
@@ -77,16 +70,15 @@ public slots:
     void getSelectedFrameToCopy();
     void getSelectedFrameToRotate();
     void invertColor();
-
     void onSaveButtonClicked();
 
 signals:
+
     void addOneFrame();
     void changeRedValue(int value);
     void changeGreenValue(int value);
     void changeBlueValue(int value);
     void changeAlphaValue(int value);
-
     void deleteFrame(int frameIndex);
     void updatePixelInFrame(int frameIndex, int rowIndex, int columnIndex, int red, int green, int blue, int alpha);
     void getPixels(int frameIndex);
