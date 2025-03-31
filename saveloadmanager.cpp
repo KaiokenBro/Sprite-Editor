@@ -1,10 +1,11 @@
 /**
  * @file saveloadmanager.cpp
- * @authors Victor Valdez Landa,
+ * @authors Victor Valdez Landa, Harrison Doppelt
  *
- * @brief This file defines the implementation of the of svaing and loading the images of sprites from the Sprite Editor
+ * @brief This file defines the implementation of the of saving and loading the images of sprites from the Sprite Editor
  *
- * @date 03/23/2025
+ * Checked by Victor Valdez Landa
+ * @date 03/30/2025
  */
 
 #include "saveloadmanager.h"
@@ -20,6 +21,11 @@
 SaveLoadManager::SaveLoadManager(QObject *parent)
     : QObject{parent}
 {}
+
+//Destructor
+SaveLoadManager::~SaveLoadManager(){
+
+}
 
 // Method - Serialize (Object -> File)
 // Saves all frames managed by FrameManager to a JSON file at the given file path.

@@ -219,7 +219,21 @@ EditorWindow::~EditorWindow() {
 
 // Slot - UI
 void EditorWindow::invertColor() {
-    sprite.invertPixels();
+    int frameIndex = getCurrentFrameIndex();
+    for(int y = 0; y < spriteHeight; ++y){
+        for(int x = 0; x < spriteWidth; ++x){
+            QColor original = sprite.pixelColor(x, y);
+            QColor inverted(
+                255 - original.red(),
+                255 - original.green(),
+                255 - original.blue(),
+                original.alpha()
+            );
+
+            sprite.setPixelColor(x, y, inverted);
+            emit updatePixelInFrame(frameIndex, y, x, inverted.red(), inverted.green(), inverted.blue(), inverted.alpha());
+        }
+    }
     updateCanvas();
 }
 
