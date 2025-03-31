@@ -28,8 +28,8 @@ EditorWindow::EditorWindow(SaveLoadManager* saveLoadManager, FrameManager* frame
     // Create the logical pixel grid (sprite image) using ARGB (supports transparency)
     sprite = QImage(spriteWidth, spriteHeight, QImage::Format_ARGB32);
 
-    // Fill the image with a transparent background
-    sprite.fill(QColor(255, 255, 255, 0));
+    // Set background color to dark gray
+    sprite.fill(QColor(100, 100, 100, 50));
 
     // Fix the QLabel size so it's always 500x500, regardless of sprite resolution
     ui->spriteLabel->setFixedSize(500, 500);
@@ -342,8 +342,8 @@ void EditorWindow::switchCanvas(std::vector<std::vector<QColor>> pixels) {
     // Create the visual canvas image (what the user sees)
     QPixmap canvas(labelWidth, labelHeight);
 
-    // Set background color to White
-    canvas.fill(Qt::white);
+    // Set background color to dark gray
+    canvas.fill(QColor(100, 100, 100, 50));
 
     QPainter painter(&canvas);
 
@@ -500,8 +500,8 @@ void EditorWindow::updateCanvas() {
     // Create the visual canvas image (what the user sees)
     QPixmap canvas(labelWidth, labelHeight);
 
-    // Set background color to White
-    canvas.fill(Qt::white);
+    // Set background color to dark gray
+    canvas.fill(QColor(100, 100, 100, 50));
 
     QPainter painter(&canvas);
 
