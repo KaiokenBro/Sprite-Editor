@@ -11,8 +11,6 @@
  * from a `.ssp` file. It serves as the entry point before the EditorWindow is launched.
  *
  * @date 03/31/2025
- *
- * Checked by Richard Nghiem
  */
 
 #include "editorwindow.h"
@@ -55,7 +53,7 @@ private:
     /**
      * @brief Pointer to the auto-generated UI elements from Qt Designer.
      */
-    Ui::MainWindow *ui;
+    Ui::MainWindow* ui;
 
     /**
      * @brief Pointer to the EditorWindow used after sprite creation or loading.

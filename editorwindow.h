@@ -12,8 +12,6 @@
  * real-time user interactions like mouse drawing, erasing, and color picking.
  *
  * @date 03/31/2025
- *
- * Checked by Victor Valdez Landa
  */
 
 #include "framemanager.h"
@@ -45,7 +43,7 @@ public:
      * @param height Initial height of the sprite.
      * @param parent Optional parent widget.
      */
-    explicit EditorWindow(SaveLoadManager* saveLoadManager, FrameManager* frameManager, int width, int height, QWidget *parent = nullptr);
+    explicit EditorWindow(SaveLoadManager* saveLoadManager, FrameManager* frameManager, int width, int height, QWidget* parent = nullptr);
 
     /**
      * @brief Destructor.
@@ -86,19 +84,19 @@ protected:
      * @param event The event to filter.
      * @return true if the event was handled; false otherwise.
      */
-    virtual bool eventFilter(QObject *watched, QEvent *event) override;
+    virtual bool eventFilter(QObject* watched, QEvent* event) override;
 
 private:
 
     /**
      * @brief Pointer to the UI layout.
      */
-    Ui::EditorWindow *ui;
+    Ui::EditorWindow* ui;
 
     /**
      * @brief Pointer to the frame manager model.
      */
-    FrameManager *frameManager;
+    FrameManager* frameManager;
 
     /**
      * @brief Pointer to the save/load manager.

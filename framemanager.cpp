@@ -11,7 +11,7 @@
 
 using std::vector;
 
-FrameManager::FrameManager(int height, int width, QObject *parent) :
+FrameManager::FrameManager(int height, int width, QObject* parent) :
     QObject(parent),
     height(height),
     width(width)
@@ -52,7 +52,7 @@ vector<Frame> FrameManager::sendFrames(){
 }
 
 void FrameManager::rotate90Clockwise(int frameIndex) {
-    Frame *frameToRotate = &frames.at(frameIndex);
+    Frame* frameToRotate = &frames.at(frameIndex);
     frameToRotate->rotateFrame();
     emit foundFrame(frameToRotate->getPixels());
 }

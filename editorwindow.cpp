@@ -11,8 +11,6 @@
  * FrameManager and SaveLoadManager to persist sprite state.
  *
  * @date 03/31/2025
- *
- * Checked by Victor Valdez Landa
  */
 
 #include "editorwindow.h"
@@ -29,7 +27,7 @@ using std::min;
 using std::max;
 using std::vector;
 
-EditorWindow::EditorWindow(SaveLoadManager* saveLoadManager, FrameManager* frameManager, int width, int height, QWidget *parent) :
+EditorWindow::EditorWindow(SaveLoadManager* saveLoadManager, FrameManager* frameManager, int width, int height, QWidget* parent) :
     QMainWindow(parent),
     ui(new Ui::EditorWindow),
     spriteWidth(width),
@@ -61,157 +59,183 @@ EditorWindow::EditorWindow(SaveLoadManager* saveLoadManager, FrameManager* frame
     connect(ui->invertButton,
             &QPushButton::clicked,
             this,
-            &EditorWindow::invertColor);
+            &EditorWindow::invertColor
+    );
 
     // Connect "Copy Color" button to enable color picking mode
     connect(ui->copyButton,
             &QPushButton::clicked,
             this,
-            &EditorWindow::enableCopyColor);
+            &EditorWindow::enableCopyColor
+    );
 
     // Connect "Eraser" button to enable eraser mode
     connect(ui->eraserButton,
             &QPushButton::clicked,
             this,
-            &EditorWindow::enableEraser);
+            &EditorWindow::enableEraser
+    );
 
     // Connect "Draw" button to enable drawing mode
     connect(ui->drawButton,
             &QPushButton::clicked,
             this,
-            &EditorWindow::enableDrawing);
+            &EditorWindow::enableDrawing
+    );
 
     // Connect red spinbox changes to update the current color's red component
     connect(ui->redSpinBox,
             &QSpinBox::valueChanged,
             this,
-            &EditorWindow::redChanged);
+            &EditorWindow::redChanged
+    );
 
     // Connect blue spinbox changes to update the current color's blue component
     connect(ui->blueSpinBox,
             &QSpinBox::valueChanged,
             this,
-            &EditorWindow::blueChanged);
+            &EditorWindow::blueChanged
+    );
 
     // Connect green spinbox changes to update the current color's green component
     connect(ui->greenSpinBox,
             &QSpinBox::valueChanged,
             this,
-            &EditorWindow::greenChanged);
+            &EditorWindow::greenChanged
+    );
 
     // Connect alpha spinbox changes to update the current color's transparency
     connect(ui->alphaSpinBox,
             &QSpinBox::valueChanged,
             this,
-            &EditorWindow::alphaChanged);
+            &EditorWindow::alphaChanged
+    );
 
     // Connect color picker mode to update red spinbox value
     connect(this,
             &EditorWindow::changeRedValue,
             ui->redSpinBox,
-            &QSpinBox::setValue);
+            &QSpinBox::setValue
+    );
 
     // Connect color picker mode to update green spinbox value
     connect(this,
             &EditorWindow::changeGreenValue,
             ui->greenSpinBox,
-            &QSpinBox::setValue);
+            &QSpinBox::setValue
+    );
 
     // Connect color picker mode to update blue spinbox value
     connect(this,
             &EditorWindow::changeBlueValue,
             ui->blueSpinBox,
-            &QSpinBox::setValue);
+            &QSpinBox::setValue
+    );
 
     // Connect color picker mode to update alpha spinbox value
     connect(this,
             &EditorWindow::changeAlphaValue,
             ui->alphaSpinBox,
-            &QSpinBox::setValue);
+            &QSpinBox::setValue
+    );
 
     // Connect startup signal to add one blank frame to match canvas
     connect(this,
             &EditorWindow::addOneFrame,
             frameManager,
-            &FrameManager::addFrame);
+            &FrameManager::addFrame
+    );
 
     // Connect "Add Frame" button to appending a blank frame to the stack
     connect(ui->addFrameButton,
             &QPushButton::clicked,
             frameManager,
-            &FrameManager::addFrame);
+            &FrameManager::addFrame
+    );
 
     // Connect frame added signal to update frame stack UI
     connect(frameManager,
             &FrameManager::frameAdded,
             this,
-            &EditorWindow::addFrameToStack);
+            &EditorWindow::addFrameToStack
+    );
 
     // Connect "Delete Frame" button to delete the selected frame from UI
     connect(ui->deleteFrameButton,
             &QPushButton::clicked,
             this,
-            &EditorWindow::deleteFrameFromStack);
+            &EditorWindow::deleteFrameFromStack
+    );
 
     // Connect delete frame signal to frame manager to delete model data
     connect(this,
             &EditorWindow::deleteFrame,
             frameManager,
-            &FrameManager::deleteFrame);
+            &FrameManager::deleteFrame
+    );
 
     // Connect pixel update signal to update the selected frame in the model
     connect(this,
             &EditorWindow::updatePixelInFrame,
             frameManager,
-            &FrameManager::updateFrame);
+            &FrameManager::updateFrame
+    );
 
     // Connect frame selection change to reloading that frame on the canvas
     connect(ui->frameStackWidget,
             &QListWidget::itemSelectionChanged,
             this,
-            &EditorWindow::getSelectedFrame);
+            &EditorWindow::getSelectedFrame
+    );
 
     // Connect frame pixel request to load pixels from the frame manager
     connect(this,
             &EditorWindow::getPixels,
             frameManager,
-            &FrameManager::getPixelsForFrame);
+            &FrameManager::getPixelsForFrame
+    );
 
     // Connect pixels loaded signal to repaint the canvas
     connect(frameManager,
             &FrameManager::foundFrame,
             this,
-            &EditorWindow::switchCanvas);
+            &EditorWindow::switchCanvas
+    );
 
     // Connect "Duplicate Frame" button to emit copy request
     connect(ui->duplicateFrameButton,
             &QPushButton::clicked,
             this,
-            &EditorWindow::getSelectedFrameToCopy);
+            &EditorWindow::getSelectedFrameToCopy
+    );
 
     // Connect copy request signal to frame manager's copy function
     connect(this,
             &EditorWindow::selectedFrameToCopy,
             frameManager,
-            &FrameManager::copyFrame);
+            &FrameManager::copyFrame
+    );
 
     // Connect "Rotate" button to emit rotation request for selected frame
     connect(ui->rotateButton,
             &QPushButton::clicked,
             this,
-            &EditorWindow::getSelectedFrameToRotate);
+            &EditorWindow::getSelectedFrameToRotate
+    );
 
     // Connect rotation signal to rotate the specified frame in model
     connect(this,
             &EditorWindow::selectedFrameToRotate,
             frameManager,
-            &FrameManager::rotate90Clockwise);
+            &FrameManager::rotate90Clockwise
+    );
 
     // Connect "Save" button to trigger file save dialog and operation
     connect(ui->saveButton,
             &QPushButton::clicked,
             this,
-            &EditorWindow::onSaveButtonClicked);
+            &EditorWindow::onSaveButtonClicked
+    );
 
 }
 
@@ -299,7 +323,7 @@ void EditorWindow::deleteFrameFromStack() {
 
             // Update the frame names upon successful deletion.
             for (int i = 0; i < ui->frameStackWidget->count(); ++i) {
-                QListWidgetItem *item = ui->frameStackWidget->item(i);
+                QListWidgetItem* item = ui->frameStackWidget->item(i);
                 item->setText("Frame " + QString::number(i + 1));
             }
         }
@@ -357,7 +381,7 @@ void EditorWindow::switchCanvas(vector<vector<QColor>> pixels) {
 }
 
 void EditorWindow::getSelectedFrame() {
-    QListWidgetItem *selectedItem = ui->frameStackWidget->currentItem();
+    QListWidgetItem* selectedItem = ui->frameStackWidget->currentItem();
 
     if (selectedItem) {
         int frameIndex = ui->frameStackWidget->row(selectedItem);
@@ -366,7 +390,7 @@ void EditorWindow::getSelectedFrame() {
 }
 
 void EditorWindow::getSelectedFrameToCopy() {
-    QListWidgetItem *selectedItem = ui->frameStackWidget->currentItem();
+    QListWidgetItem* selectedItem = ui->frameStackWidget->currentItem();
 
     if (selectedItem) {
         int frameIndex = ui->frameStackWidget->row(selectedItem);
@@ -375,7 +399,7 @@ void EditorWindow::getSelectedFrameToCopy() {
 }
 
 void EditorWindow::getSelectedFrameToRotate() {
-    QListWidgetItem *selectedItem = ui->frameStackWidget->currentItem();
+    QListWidgetItem* selectedItem = ui->frameStackWidget->currentItem();
     int frameIndex;
 
     if (selectedItem) {
@@ -473,7 +497,7 @@ void EditorWindow::updateCanvas() {
     ui->spriteLabel->setPixmap(canvas);
 }
 
-bool EditorWindow::eventFilter(QObject *watched, QEvent *event) {
+bool EditorWindow::eventFilter(QObject* watched, QEvent* event) {
 
     // Only handle events for the spriteLabel (the drawing area)// Only handle events for the spriteLabel (the drawing area)
     if (watched == ui->spriteLabel) {
@@ -503,7 +527,7 @@ bool EditorWindow::eventFilter(QObject *watched, QEvent *event) {
 
         // Handle mouse button press (begin drawing or interaction)
         if (event->type() == QEvent::MouseButtonPress) {
-            QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+            QMouseEvent* mouseEvent = static_cast<QMouseEvent *>(event);
             int x, y;
             getXY(mouseEvent->pos(), x, y);
 
@@ -520,7 +544,7 @@ bool EditorWindow::eventFilter(QObject *watched, QEvent *event) {
 
         // Handle mouse movement (continue drawing while dragging)
         else if (event->type() == QEvent::MouseMove && mousePressed) {
-            QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+            QMouseEvent* mouseEvent = static_cast<QMouseEvent *>(event);
             int x, y;
             getXY(mouseEvent->pos(), x, y);
 
@@ -576,7 +600,7 @@ void EditorWindow::handleDrawingAction(int x, int y) {
 }
 
 int EditorWindow::getCurrentFrameIndex() {
-    QListWidgetItem *selectedItem = ui->frameStackWidget->currentItem();
+    QListWidgetItem* selectedItem = ui->frameStackWidget->currentItem();
 
     // If an item is selected, return its index (row number) in the list.
     // If no item is selected (e.g., at startup), default to frame index 0.

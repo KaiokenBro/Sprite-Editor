@@ -7,8 +7,6 @@
  * Provides logic for input validation, file loading, and transition to the EditorWindow.
  *
  * @date 03/31/2025
- *
- * Checked by Richard Nghiem
  */
 
 #include "mainwindow.h"
@@ -20,7 +18,7 @@
 #include <QMessageBox>
 #include <QString>
 
-MainWindow::MainWindow(SaveLoadManager* saveLoadManager, FrameManager* frameManager, EditorWindow* editorWindow, QWidget *parent) :
+MainWindow::MainWindow(SaveLoadManager* saveLoadManager, FrameManager* frameManager, EditorWindow* editorWindow, QWidget* parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
@@ -30,7 +28,7 @@ MainWindow::MainWindow(SaveLoadManager* saveLoadManager, FrameManager* frameMana
     this->saveLoadManager = saveLoadManager;
 
     // Create a validator to restrict input to integers between 1 and 64
-    QIntValidator *validator = new QIntValidator(1, 64, this);
+    QIntValidator* validator = new QIntValidator(1, 64, this);
     ui->widthLineEdit->setValidator(validator);
     ui->heightLineEdit->setValidator(validator);
 
@@ -42,67 +40,77 @@ MainWindow::MainWindow(SaveLoadManager* saveLoadManager, FrameManager* frameMana
         "QGroupBox {"
         "  border: 2px solid black;"
         "}"
-        );
+    );
 
     // Connect width input to input validation
     connect(ui->widthLineEdit,
             &QLineEdit::textChanged,
             this,
-            &MainWindow::validateInputs);
+            &MainWindow::validateInputs
+    );
 
     // Connect height input to input validation
     connect(ui->heightLineEdit,
             &QLineEdit::textChanged,
             this,
-            &MainWindow::validateInputs);
+            &MainWindow::validateInputs
+    );
 
     // Connect "Set Size" button to validation and visual feedback
     connect(ui->setSizeButton,
             &QPushButton::clicked,
             this,
-            &MainWindow::onSetSizeButtonClicked);
+            &MainWindow::onSetSizeButtonClicked
+    );
 
     // Connect "Create" button to opening a new sprite in EditorWindow
     connect(ui->createButton,
             &QPushButton::clicked,
             this,
-            &MainWindow::openEditorWindowNew);
+            &MainWindow::openEditorWindowNew
+    );
 
     // Connect "Load File" button to file dialog for loading .ssp file
     connect(ui->loadButton,
             &QPushButton::clicked,
             this,
-            &MainWindow::loadFile);
+            &MainWindow::loadFile
+    );
 
     // Connect "Open" button to load the selected file and enter editor
     connect(ui->openButton,
             &QPushButton::clicked,
             this,
-            &MainWindow::openEditorWindowLoad);
+            &MainWindow::openEditorWindowLoad
+    );
 
     // Keep height synchronized with width input
     connect(ui->widthLineEdit,
             &QLineEdit::textChanged,
             this,
-            &MainWindow::syncHeightToWidth);
+            &MainWindow::syncHeightToWidth
+    );
 
     // Keep width synchronized with height input
     connect(ui->heightLineEdit,
             &QLineEdit::textChanged,
             this,
-            &MainWindow::syncWidthToHeight);
+            &MainWindow::syncWidthToHeight
+    );
 
     // Invalidate confirmation when width is changed
     connect(ui->widthLineEdit,
             &QLineEdit::textChanged,
             this,
-            &MainWindow::invalidateSizeConfirmation);
+            &MainWindow::invalidateSizeConfirmation
+    );
 
     // Invalidate confirmation when height is changed
     connect(ui->heightLineEdit,
             &QLineEdit::textChanged,
             this,
-            &MainWindow::invalidateSizeConfirmation);
+            &MainWindow::invalidateSizeConfirmation
+    );
 
 }
 
@@ -200,7 +208,7 @@ void MainWindow::loadFile() {
         "Open Sprite File",                 // Dialog title
         QDir::homePath(),                   // Default directory
         "Sprite Save Files (*.ssp)"         // File filter
-        );
+    );
 
     // If the user selects a file
     if (!fileName.isEmpty()) {

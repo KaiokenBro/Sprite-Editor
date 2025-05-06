@@ -1,35 +1,7 @@
 /**
  * @file main.cpp
- *
  * @brief Entry point for the Sprite Editor application. Initializes Qt application and main UI components.
- *
- * Team Members:
- * - Victor Valdez Landa
- * - Harrison Doppelt
- * - Charlie Jones
- * - Sam Garcia
- * - Richard Nghiem
- * - Nicholas Cicalese
- *
- * GitHub Usernames:
- * - KaiokenBro
- * - hdoppelt
- * - charlesj24240
- * - ncicalese
- * - SamuelFGarcia4
- * - Urichng
- *
- * Repository:
- * - https://github.com/UofU-CS3505/cs3505-assignment8-KaiokenBro
- *
- * Additional Features:
- * - Invert Colors
- * - Rotate Sprite
- * - Copy Pixel Color
- *
  * @date 03/31/2025
- *
- * Checked by Harrison Doppelt
  */
 
 #include "mainwindow.h"

@@ -6,8 +6,6 @@
  * of sprite frames at user-defined speed and resolution.
  *
  * @date 03/31/2025
- *
- * Checked by Charlie Jones
  */
 
 #include "previewwindow.h"
@@ -17,7 +15,7 @@ using std::min;
 using std::max;
 using std::vector;
 
-PreviewWindow::PreviewWindow(FrameManager* frameManager, int height, int width, QWidget *parent) :
+PreviewWindow::PreviewWindow(FrameManager* frameManager, int height, int width, QWidget* parent) :
     QMainWindow(parent),
     ui(new Ui::previewwindow),
     actualHeight(height),
@@ -30,7 +28,8 @@ PreviewWindow::PreviewWindow(FrameManager* frameManager, int height, int width, 
     connect(this,
             &PreviewWindow::getFrames,
             frameManager,
-            &FrameManager::sendFrames);
+            &FrameManager::sendFrames
+    );
 
 }
 

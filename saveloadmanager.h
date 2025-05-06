@@ -6,8 +6,6 @@
  * @authors Victor Valdez Landa
  * @brief Declaration of the SaveLoadManager class used for saving and loading sprite data in the Sprite Editor.
  * @date 03/31/2025
- *
- * Checked by Samuel Garcia
  */
 
 #include "framemanager.h"
@@ -32,7 +30,7 @@ public:
      * @brief Constructs a SaveLoadManager instance.
      * @param parent Optional parent QObject.
      */
-    explicit SaveLoadManager(QObject *parent = nullptr);
+    explicit SaveLoadManager(QObject* parent = nullptr);
 
     /**
      * @brief Saves all frames managed by the given FrameManager to a JSON-based .ssp file.

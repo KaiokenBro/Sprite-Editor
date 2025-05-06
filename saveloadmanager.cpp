@@ -8,8 +8,6 @@
  * and saving it to disk, as well as loading and reconstructing sprite frames from previously saved files.
  *
  * @date 03/31/2025
- *
- * Checked by Samuel Garcia
  */
 
 #include "saveloadmanager.h"
@@ -23,7 +21,7 @@
 
 using std::vector;
 
-SaveLoadManager::SaveLoadManager(QObject *parent) : QObject{parent} {}
+SaveLoadManager::SaveLoadManager(QObject* parent) : QObject{parent} {}
 
 bool SaveLoadManager::saveToFile(FrameManager& manager, QString filePath) {
     QJsonArray framesArray;

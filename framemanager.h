@@ -6,8 +6,6 @@
  * @author Charlie Jones
  * @brief Declaration of the FrameManager class, which manages a collection of animation frames for a sprite.
  * @date 03/31/2025
- *
- * Checked by Nicholas Cicalese
  */
 
 #include "frame.h"
@@ -35,7 +33,7 @@ public:
      * @param width The width of each frame.
      * @param parent Optional parent QObject.
      */
-    explicit FrameManager(int height, int width, QObject *parent = nullptr);
+    explicit FrameManager(int height, int width, QObject* parent = nullptr);
 
     /**
      * @brief The list of frames currently managed.

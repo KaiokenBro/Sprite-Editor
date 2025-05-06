@@ -12,8 +12,6 @@
  * and actual pixel size.
  *
  * @date 03/31/2025
- *
- * Checked by Charlie Jones
  */
 
 #include "frame.h"
@@ -48,7 +46,7 @@ public:
      * @param frameManager Pointer to the FrameManager instance for accessing frames.
      * @param parent Optional QWidget parent.
      */
-    explicit PreviewWindow(FrameManager* frameManager, int spriteHeight, int spriteWidth, QWidget *parent = nullptr);
+    explicit PreviewWindow(FrameManager* frameManager, int spriteHeight, int spriteWidth, QWidget* parent = nullptr);
 
     /**
      * @brief Destructor for the PreveiwWindow.
@@ -60,7 +58,7 @@ private:
     /**
      * @brief Pointer to the UI layout for the preview window.
      */
-    Ui::previewwindow *ui;
+    Ui::previewwindow* ui;
 
     /**
      * @brief Height of the sprite in pixels.

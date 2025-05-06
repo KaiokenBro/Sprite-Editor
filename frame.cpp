@@ -3,8 +3,6 @@
  * @brief Implementation of the Frame class, which represents a 2D pixel grid used in sprite frames.
  * @author Richard Nghiem
  * @date 03/31/2025
- *
- * Checked by Harrison Doppelt
  */
 
 #include "frame.h"
@@ -19,7 +17,7 @@ Frame::Frame(int height, int width) : height(height), width(width) {
     for (int i = 0; i < height; i++) {
         vector<QColor> pixelsRow;
 
-        for(int j = 0; j < width; j++) {
+        for (int j = 0; j < width; j++) {
             QColor newPixel(255, 255, 255, 0);
             pixelsRow.push_back(newPixel);
         }
@@ -35,7 +33,7 @@ void Frame::updateFrame(int rowIndex, int columnIndex, int red, int green, int b
     pixelToUpdate->setAlpha(alpha);
 }
 
-std::vector<std::vector<QColor>> Frame::getPixels() {
+vector<vector<QColor>> Frame::getPixels() {
     return pixels;
 }
 
@@ -60,6 +58,7 @@ void Frame::rotateFrame() {
     for (int i = 0; i < height; i++) {
         int leftIndex = 0;
         int rightIndex = width - 1;
+
         while (leftIndex < rightIndex) {
             swap(pixels.at(i).at(leftIndex), pixels.at(i).at(rightIndex));
             leftIndex++;
