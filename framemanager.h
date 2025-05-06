@@ -3,7 +3,6 @@
 
 /**
  * @file framemanager.h
- * @author Charlie Jones
  * @brief Declaration of the FrameManager class, which manages a collection of animation frames for a sprite.
  * @date 03/31/2025
  */

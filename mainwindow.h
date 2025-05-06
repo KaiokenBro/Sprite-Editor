@@ -3,8 +3,6 @@
 
 /**
  * @file mainwindow.h
- * @author Harrison Doppelt, Victor Valdez Landa
- *
  * @brief Declares the MainWindow class, which provides the initial UI for creating or loading sprite files.
  *
  * The MainWindow allows users to enter the dimensions for a new sprite, or load an existing sprite

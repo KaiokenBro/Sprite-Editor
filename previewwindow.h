@@ -3,8 +3,6 @@
 
 /**
  * @file previewwindow.h
- * @author Samuel Garcia
- *
  * @brief Declares the PreviewWindow class, which displays animated previews of sprite frames.
  *
  * The PreviewWindow connects to the FrameManager to retrieve all current frames and

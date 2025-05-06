@@ -1,6 +1,5 @@
 /**
  * @file framemanager.cpp
- * @author Charlie Jones
  * @brief Implementation of the FrameManager class for managing sprite frames and pixel data.
  * @date 03/31/2025
  *

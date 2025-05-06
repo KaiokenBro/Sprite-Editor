@@ -3,8 +3,6 @@
 
 /**
  * @file frame.h
- * @author Richard Nghiem
- *
  * @brief Declares the Frame class, which represents a 2D grid of pixels (QColor) that make up a single sprite frame.
  *
  * A Frame contains a 2D vector of QColor objects, each representing a pixel with RGBA values.

@@ -3,8 +3,6 @@
 
 /**
  * @file editorwindow.h
- * @author Harrison Doppelt, Samuel Garcia, Nicholas Cicalese, Charlie Jones, Victor Valdez Landa, Richard Nghiem
- *
  * @brief Declares the EditorWindow class for the main sprite editing interface.
  *
  * The EditorWindow is responsible for drawing, editing, coloring, and managing frames

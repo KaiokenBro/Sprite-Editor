@@ -3,7 +3,6 @@
 
 /**
  * @file saveloadmanager.cpp
- * @authors Victor Valdez Landa
  * @brief Declaration of the SaveLoadManager class used for saving and loading sprite data in the Sprite Editor.
  * @date 03/31/2025
  */

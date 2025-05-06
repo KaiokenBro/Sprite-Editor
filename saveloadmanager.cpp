@@ -1,7 +1,5 @@
 /**
  * @file saveloadmanager.cpp
- * @author Victor Valdez Landa
- *
  * @brief Implementation of the SaveLoadManager class for saving and loading sprite data in the Sprite Editor.
  *
  * This file provides functionality for converting the internal sprite representation into JSON

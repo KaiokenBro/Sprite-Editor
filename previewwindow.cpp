@@ -1,7 +1,5 @@
 /**
  * @file previewwindow.cpp
- * @author Samuel Garcia
- *
  * @brief Implements the logic for the PreviewWindow class which renders animated previews
  * of sprite frames at user-defined speed and resolution.
  *
