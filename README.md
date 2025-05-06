@@ -15,20 +15,6 @@ Developed in C++ using the Qt framework, it offers a user-friendly interface for
 - Qt Framework: For GUI components and application structure.
 - QMake: Build system (SpriteEditor.pro project file).
 
-## 📁 Project Structure
-```bash
-Sprite-Editor/
-├── editorwindow.cpp/.h/.ui     # Main editor window implementation and UI layout
-├── frame.cpp/.h                # Frame representation and logic
-├── framemanager.cpp/.h         # Management of multiple frames
-├── previewwindow.cpp/.h/.ui    # Preview window for animations
-├── saveloadmanager.cpp/.h      # Save and load functionality
-├── startwindow.cpp/.h/.ui      # Startup window and initial project setup
-├── main.cpp                    # Application entry point
-├── SpriteEditor.pro            # QMake project file
-└── .gitignore                  # Git ignore file
-```
-
 ## 🚀 Getting Started
 **Prerequisites**
 - Qt Creator installed on your system.
